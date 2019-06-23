@@ -81,9 +81,8 @@ class Page extends React.Component<Props, State> {
                     </Navbar.Collapse>
                 </Navbar>
 
-                <div style={{paddingLeft: '15%', paddingRight: '15%', margin: '5%'}}>
                     {mainContent}
-                </div>
+
             </div>
         )
     }
