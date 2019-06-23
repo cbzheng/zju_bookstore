@@ -1,6 +1,7 @@
 import * as React from 'react'
 import {Container, Row, Col} from 'react-bootstrap'
 import Sidebar from "./sidebar";
+import Recommend from "./recommend";
 
 
 function Home() {
@@ -14,7 +15,7 @@ function Home() {
                         <Sidebar/>
                     </Col>
                     <Col>
-                        <h1> ZCB 卖书的地方</h1>
+                        <Recommend />
                     </Col>
                 </Row>
             </Container>
