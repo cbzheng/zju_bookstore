@@ -19,7 +19,7 @@ function Login(props: Props) {
     let handleSubmit = () => {
         console.log('user: ', userName);
         console.log('password: ', password);
-        login();
+        login(userName, password);
     };
 
     return (

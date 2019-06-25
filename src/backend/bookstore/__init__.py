@@ -1,25 +1,39 @@
 from flask import Flask
 from db.mongodb import MongoDB
-from flask import request, make_response, json
+from flask import request, make_response, jsonify
 
 
 def create_app(test_config=None):
     app = Flask(__name__)
     db = MongoDB()
 
-    @app.route('/login/', methods=['POST', 'GET'])
+    @app.route('/login/', methods=['POST'])
     def login_store():
-        print('hei')
+        data = request.get_json()
+        user = db.check_user(data['username'], data['password'])
 
-        if request.method == 'POST':
-            data = request.get_json()
-            print(data)
+        if user is None:
+            return jsonify({
+                'result': False
+            })
+        return jsonify({
+            'result': True,
+            'username': user.user_name,
+            'email': user.email
+        })
 
     @app.route('/signup/', methods=['POST'])
     def signup_store():
         data = request.get_json()
-        db.add_user(data['username'], data['email'], data['password'])
-        return 'hi'
+
+        if db.add_user(data['username'], data['email'], data['password']):
+            return jsonify({
+                'result': True
+            })
+        else:
+            return jsonify({
+                'result': False
+            })
 
 
     @app.route('/hello')

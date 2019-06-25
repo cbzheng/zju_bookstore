@@ -30,11 +30,28 @@ function SignUp(props: Props) {
         }
     }, [confirmPass, password]);
 
-    let handleSubmit = (event: any) => {
-        console.log('password: ', password)
+    // handle the SIGNUP submission
+    let handleSubmit = async (event: any) => {
+        console.log('password: ', password);
 
-        signup(userName, email, password);
+        if (userName != '' && email != '' && password != '') {
+            let result = await signup(userName, email, password);
 
+            // if the username exist in the database
+            if (!result) {
+                setInform(<Alert variant={'danger'}>
+                    用户名已存在!
+                </Alert>)
+            } else {
+                setInform(<> </>)
+                // SIGN UP SUCCESS !!!
+            }
+
+        } else {
+            setInform(<Alert variant={'danger'}>
+                请完整填写相关信息！
+            </Alert>)
+        }
     };
 
     return (
@@ -55,6 +72,7 @@ function SignUp(props: Props) {
                                 placeholder="User Name"
                                 value={userName}
                                 onChange={(e: any) => setUserName(e.target.value)}
+                                required={true}
                             />
                         </Form.Group>
                         <Form.Group controlId="formBasicEmail">
@@ -64,6 +82,7 @@ function SignUp(props: Props) {
                                 placeholder="Email"
                                 value={email}
                                 onChange={(e: any) => setEmail(e.target.value)}
+                                required={true}
                             />
                         </Form.Group>
 
@@ -74,6 +93,7 @@ function SignUp(props: Props) {
                                 placeholder="Password"
                                 value={password}
                                 onChange={(e: any) => setPassword(e.target.value)}
+                                required={true}
                             />
                         </Form.Group>
 
@@ -84,6 +104,7 @@ function SignUp(props: Props) {
                                 placeholder="Confirm"
                                 value={confirmPass}
                                 onChange={(e: any) => setConfirmPass(e.target.value)}
+                                required={true}
                             />
                         </Form.Group>
 
