@@ -2,6 +2,8 @@ import {Button, Card, Nav, Form, Col} from 'react-bootstrap'
 import * as React from 'react'
 import 'react-dom'
 import {useState} from "react";
+import '../API'
+import {login} from "../API";
 
 
 export interface Props {
@@ -17,6 +19,7 @@ function Login(props: Props) {
     let handleSubmit = () => {
         console.log('user: ', userName);
         console.log('password: ', password);
+        login();
     };
 
     return (
@@ -55,11 +58,11 @@ function Login(props: Props) {
                         </Form.Group>
 
                         <span style={{marginRight: '5%', marginTop: '5%'}}>
-                          <Button variant="primary" type="submit" onClick={handleSubmit}>
+                          <Button variant="primary" onClick={handleSubmit}>
                               登录
                           </Button>
                           </span>
-                        <Button variant="primary" type="submit">
+                        <Button variant="primary">
                             忘记密码
                         </Button>
                     </Form>

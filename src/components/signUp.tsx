@@ -2,6 +2,7 @@ import {Button, Card, Nav, Form, Col, Alert} from 'react-bootstrap'
 import * as React from 'react'
 import 'react-dom'
 import {useEffect, useState} from "react";
+import {signup} from "../API";
 
 
 export interface Props {
@@ -32,9 +33,9 @@ function SignUp(props: Props) {
     let handleSubmit = (event: any) => {
         console.log('password: ', password)
 
+        signup(userName, email, password);
 
     };
-
 
     return (
         <div style={{ marginLeft: '20%', marginRight:'20%'}}>
