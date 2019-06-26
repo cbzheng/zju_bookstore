@@ -21,12 +21,15 @@ class MongoDB():
         user = Users.objects.get(user_name=username)
         return user
 
-    def add_book(self, book_name, originPrice, curPrice, img, book_class, description):
+    def add_book(self, book_name, originPrice, curPrice, img, book_class, description, timestamp, seller):
         book = Books(book_name=book_name,
                      originPrice=originPrice,
                      curPrice=curPrice,
                      image=img,
                      book_class=book_class,
-                     description=description)
+                     description=description,
+                     timestamp=timestamp,
+                     image_name=img.filename,
+                     seller=seller)
         book.save()
         return True

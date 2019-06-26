@@ -1,11 +1,24 @@
 from flask import Flask
 from db.mongodb import MongoDB
-from flask import request, make_response, jsonify
+from flask import request, make_response, jsonify, send_file
+from bookstore.recommand import get_recommend_books, get_book_image
 
+# Constants
+RECOMMEND_BOOK_NUM = 4
 
 def create_app(test_config=None):
     app = Flask(__name__)
     db = MongoDB()
+
+    @app.route('/recommend/<username>', methods=['GET'])
+    def recommend(username):
+        print('User Name', username)
+        return get_recommend_books(username, db)
+
+    @app.route('/img/<timestamp>', methods=['GET'])
+    def get_img(timestamp):
+        img_name, img = get_book_image(timestamp, db)
+        return send_file(img, attachment_filename=img_name)
 
     @app.route('/newbook/', methods=['POST'])
     def upload_book():
@@ -15,7 +28,9 @@ def create_app(test_config=None):
                        data['curPrice'],
                        request.files['image'],
                        data['book_class'],
-                       data['description']):
+                       data['description'],
+                       timestamp=data['timestamp'],
+                       seller=data['seller']):
 
             return jsonify({
                 'result': True

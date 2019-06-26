@@ -46,7 +46,8 @@ export interface Product {
     curPrice : Number,
     image : File,
     book_class : string,
-    description : string
+    description : string,
+    seller: string
 }
 
 export function uploadProductInfo(book : Product) {
@@ -57,6 +58,8 @@ export function uploadProductInfo(book : Product) {
     formData.append('curPrice', book.curPrice.toString());
     formData.append('book_class', book.book_class);
     formData.append('description', book.description);
+    formData.append('timestamp', Date.now().toString());
+    formData.append('seller', book.seller);
 
     return axios.post('/newbook/', formData, {
         headers: {
@@ -65,6 +68,21 @@ export function uploadProductInfo(book : Product) {
     }).then((response)=>{
         return !!response.data.result;
     })
+}
+
+// Get Recommend books
+export function getRecommendBooks(name: string) {
+    if (name === ''){
+        name = '__normal'
+    }
+    return axios.get('/recommend/' + name).then((response)=>{
+        return response.data;
+    })
+}
+
+// Get Book Image
+export function getBookImg(timestamp: string) {
+    return axios.get('/img/'+timestamp)
 }
 
 export default axios;

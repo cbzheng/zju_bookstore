@@ -65,7 +65,7 @@ class Page extends React.Component<Props, State> {
                 mainContent = <Home userName={this.state.userName}/>;
                 break;
             case PageState.New_Product:
-                mainContent = <NewProduct/>
+                mainContent = <NewProduct username={this.state.userName}  jump={this.handlePageJump}/>;
             default:
                 break;
         }
@@ -89,16 +89,16 @@ class Page extends React.Component<Props, State> {
                                     <Nav.Link href="#signup" onClick={() => this.handlePageJump(PageState.SignUp)}>
                                         注册
                                     </Nav.Link>
-                                    <Nav.Link href="#new" onClick={() => this.handlePageJump(PageState.New_Product)}>
-                                        发布商品
-                                    </Nav.Link>
+
                                 </>
 
                             }
                             {
                                 this.state.isLogin &&
                                 <>
-
+                                    <Nav.Link href="#new" onClick={() => this.handlePageJump(PageState.New_Product)}>
+                                        发布商品
+                                    </Nav.Link>
                                     <Nav.Link href="#msg" onClick={() => this.handlePageJump(PageState.Message)}>
                                         消息
                                     </Nav.Link>
@@ -121,7 +121,7 @@ class Page extends React.Component<Props, State> {
 
                 {mainContent}
 
-                <div style={{marginTop:'10%'}}>
+                <div style={{marginTop:'8%'}}>
                     <Jumbotron fluid>
 
                         <Container>

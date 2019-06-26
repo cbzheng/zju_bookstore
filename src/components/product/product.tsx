@@ -12,7 +12,11 @@ function Product(props: Props) : React.ReactNode{
 
     return (
         <div>
+            <Card>
+                <Card.Body>
 
+                </Card.Body>
+            </Card>
         </div>
     )
 }

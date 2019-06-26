@@ -6,9 +6,18 @@ import {useState} from "react";
 import ImageUploader from 'react-images-upload'
 import {uploadProductInfo} from "../../API";
 import {async} from "q";
+import PageState from "../../utils/page-state";
 
+export interface Props {
+    username: string,
+    jump: Function
+}
 
-function NewProduct() {
+function sleep(ms : number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function NewProduct(props: Props) {
 
     const [validated, setValidated] = useState(false);
 
@@ -50,11 +59,12 @@ function NewProduct() {
                 curPrice: curPrice,
                 description: description,
                 image: pictures[0],
-                book_class: bookClass
+                book_class: bookClass,
+                seller: props.username
             });
 
             if (result) {
-                setUpdate(true)
+                setUpdate(true);
                 setInform(
                     <Button variant="outline-success" disabled>
                         <Spinner
@@ -67,6 +77,8 @@ function NewProduct() {
                         发布成功，前往商品页...
                     </Button>
                 )
+                await sleep(1000);
+                props.jump(PageState.Home)
             }
         }
     }
@@ -80,7 +92,7 @@ function NewProduct() {
     return (
         <div style={{marginLeft: '10%', marginRight: '10%', marginTop: '5%', marginBottom: '10%'}}>
             <div >
-            <Jumbotron fluid style={{backgroundColor:'skyblue'}}>
+            <Jumbotron fluid={true} style={{backgroundColor:'skyblue'}}>
 
                 <Container >
                     <h1 style={{color:'white', fontFamily:'苹方-简'}}>发布你手中旧书的信息吧</h1>
