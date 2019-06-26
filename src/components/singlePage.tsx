@@ -1,9 +1,11 @@
 import * as React from 'react'
-import {Button, Form, FormControl, Nav, Navbar, NavDropdown} from 'react-bootstrap'
+import {Button, Container, Form, FormControl, Jumbotron, Nav, Navbar} from 'react-bootstrap'
 import Login from "./login";
 import PageState from '../utils/page-state'
 import SignUp from "./signUp";
 import Home from "./home";
+import NewProduct from "./product/sell";
+
 
 export interface Props {
     isLogin: boolean
@@ -13,7 +15,8 @@ export interface Props {
 // the state of the page
 export interface State {
     isLogin: boolean,
-    pageState: PageState
+    pageState: PageState,
+    userName: string
 }
 
 class Page extends React.Component<Props, State> {
@@ -22,10 +25,24 @@ class Page extends React.Component<Props, State> {
         super(props);
         this.state = {
             isLogin: props.isLogin,
-            pageState: PageState.Login
+            pageState: PageState.Login,
+            userName: ''
         };
     }
 
+    // Share state: User Name
+    handelUserInform = (name: string): void => {
+        this.setState((state) => ({
+            userName: name,
+            isLogin: true
+        }))
+    }
+
+    ExitLogin = (): void => {
+        this.setState((state) => ({
+            isLogin: false
+        }))
+    }
 
     handlePageJump = (s: PageState): void => {
         this.setState((state) => ({
@@ -39,14 +56,16 @@ class Page extends React.Component<Props, State> {
 
         switch (this.state.pageState) {
             case PageState.Login:
-                mainContent = <Login/>;
+                mainContent = <Login emitUserName={this.handelUserInform} emitPageJump={this.handlePageJump}/>;
                 break;
             case PageState.SignUp:
-                mainContent = <SignUp/>;
+                mainContent = <SignUp emitPageJump={this.handlePageJump}/>;
                 break;
             case PageState.Home:
-                mainContent = <Home/>;
+                mainContent = <Home userName={this.state.userName}/>;
                 break;
+            case PageState.New_Product:
+                mainContent = <NewProduct/>
             default:
                 break;
         }
@@ -70,6 +89,25 @@ class Page extends React.Component<Props, State> {
                                     <Nav.Link href="#signup" onClick={() => this.handlePageJump(PageState.SignUp)}>
                                         注册
                                     </Nav.Link>
+                                    <Nav.Link href="#new" onClick={() => this.handlePageJump(PageState.New_Product)}>
+                                        发布商品
+                                    </Nav.Link>
+                                </>
+
+                            }
+                            {
+                                this.state.isLogin &&
+                                <>
+
+                                    <Nav.Link href="#msg" onClick={() => this.handlePageJump(PageState.Message)}>
+                                        消息
+                                    </Nav.Link>
+                                    <Nav.Link href="#profile" onClick={() => this.handlePageJump(PageState.Profile)}>
+                                        个人中心
+                                    </Nav.Link>
+                                    <Nav.Link href="#profile" onClick={() => { this.ExitLogin();  this.handlePageJump(PageState.Login)}}>
+                                        退出登录
+                                    </Nav.Link>
                                 </>
                             }
 
@@ -81,10 +119,24 @@ class Page extends React.Component<Props, State> {
                     </Navbar.Collapse>
                 </Navbar>
 
-                    {mainContent}
+                {mainContent}
 
+                <div style={{marginTop:'10%'}}>
+                    <Jumbotron fluid>
+
+                        <Container>
+                            <h3>ZJU 旧书交易平台</h3>
+
+                            <p>
+                                在这里交换知识
+                            </p>
+                            <hr></hr>
+                            &copy; {new Date().getFullYear()} Copyright
+                        </Container>
+                    </Jumbotron>
+                </div>
             </div>
-        )
+        );
     }
 }
 

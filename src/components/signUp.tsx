@@ -3,10 +3,11 @@ import * as React from 'react'
 import 'react-dom'
 import {useEffect, useState} from "react";
 import {signup} from "../API";
+import PageState from "../utils/page-state";
 
 
 export interface Props {
-
+    emitPageJump: Function
 }
 
 function SignUp(props: Props) {
@@ -45,6 +46,7 @@ function SignUp(props: Props) {
             } else {
                 setInform(<> </>)
                 // SIGN UP SUCCESS !!!
+                props.emitPageJump(PageState.Login)
             }
 
         } else {

@@ -3,8 +3,12 @@ import {Container, Row, Col} from 'react-bootstrap'
 import Sidebar from "./sidebar";
 import Recommend from "./recommend";
 
+interface Props {
+    userName: string
+}
 
-function Home() {
+
+function Home(props: Props) {
 
     return (
 

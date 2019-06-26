@@ -7,6 +7,20 @@ def create_app(test_config=None):
     app = Flask(__name__)
     db = MongoDB()
 
+    @app.route('/newbook/', methods=['POST'])
+    def upload_book():
+        data = request.form
+        if db.add_book(data['book_name'],
+                       data['originPrice'],
+                       data['curPrice'],
+                       request.files['image'],
+                       data['book_class'],
+                       data['description']):
+
+            return jsonify({
+                'result': True
+            })
+
     @app.route('/login/', methods=['POST'])
     def login_store():
         data = request.get_json()
@@ -19,7 +33,7 @@ def create_app(test_config=None):
         return jsonify({
             'result': True,
             'username': user.user_name,
-            'email': user.email
+            # 'email': user.email
         })
 
     @app.route('/signup/', methods=['POST'])

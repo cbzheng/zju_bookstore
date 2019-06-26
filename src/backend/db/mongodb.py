@@ -1,5 +1,6 @@
 import mongoengine as mg
 from db.user import Users
+from db.book import Books
 from mongoengine.queryset.visitor import Q
 
 
@@ -19,3 +20,13 @@ class MongoDB():
             return None
         user = Users.objects.get(user_name=username)
         return user
+
+    def add_book(self, book_name, originPrice, curPrice, img, book_class, description):
+        book = Books(book_name=book_name,
+                     originPrice=originPrice,
+                     curPrice=curPrice,
+                     image=img,
+                     book_class=book_class,
+                     description=description)
+        book.save()
+        return True

@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Card } from 'react-bootstrap'
 
 export interface Props {
     
@@ -9,7 +10,11 @@ function Product(props: Props) : React.ReactNode{
 
 
 
-    return <h1>Hi</h1>
+    return (
+        <div>
+
+        </div>
+    )
 }
 
 export default Product;

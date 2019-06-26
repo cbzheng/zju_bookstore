@@ -1,13 +1,15 @@
-import {Button, Card, Nav, Form, Col} from 'react-bootstrap'
+import {Button, Card, Nav, Form, Col, Alert} from 'react-bootstrap'
 import * as React from 'react'
 import 'react-dom'
 import {useState} from "react";
 import '../API'
 import {login} from "../API";
+import PageState from "../utils/page-state";
 
 
 export interface Props {
-
+    emitUserName: Function,
+    emitPageJump: Function
 }
 
 function Login(props: Props) {
@@ -15,15 +17,24 @@ function Login(props: Props) {
     // States
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
+    const [inform, setInform] = useState(<></>);
 
-    let handleSubmit = () => {
+    let handleSubmit = async () => {
         console.log('user: ', userName);
         console.log('password: ', password);
-        login(userName, password);
+        let name = await login(userName, password);
+
+        // if login successfully
+        if (name !== "") {
+            props.emitUserName(name);
+            props.emitPageJump(PageState.Home)
+        } else {
+            setInform(<Alert variant={'danger'}> '用户名或密码错误！' </Alert>)
+        }
     };
 
     return (
-        <div style={{marginLeft: '20%', marginRight: '20%'}}>
+        <div style={{marginLeft: '20%', marginRight: '20%', marginTop: '5%'}}>
             <Card style={{margin: '10%'}}>
                 <Card.Header>
                       <span style={{alignContent: 'center'}}>
@@ -56,6 +67,8 @@ function Login(props: Props) {
                                 }}
                             />
                         </Form.Group>
+
+                        { inform }
 
                         <span style={{marginRight: '5%', marginTop: '5%'}}>
                           <Button variant="primary" onClick={handleSubmit}>
