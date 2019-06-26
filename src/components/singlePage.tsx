@@ -5,7 +5,7 @@ import PageState from '../utils/page-state'
 import SignUp from "./signUp";
 import Home from "./home";
 import NewProduct from "./product/sell";
-
+import Product, {ProductProps, basicProduct} from "./product/product";
 
 export interface Props {
     isLogin: boolean
@@ -17,6 +17,7 @@ export interface State {
     isLogin: boolean,
     pageState: PageState,
     userName: string
+    product: ProductProps
 }
 
 class Page extends React.Component<Props, State> {
@@ -26,7 +27,8 @@ class Page extends React.Component<Props, State> {
         this.state = {
             isLogin: props.isLogin,
             pageState: PageState.Login,
-            userName: ''
+            userName: '',
+            product: basicProduct
         };
     }
 
@@ -50,6 +52,13 @@ class Page extends React.Component<Props, State> {
         }))
     }
 
+    // top level handler
+    handleProductRequest = (s: ProductProps): void => {
+        this.setState((state) => ({
+            product: s
+        }))
+    }
+
     render(): React.ReactNode {
 
         let mainContent;
@@ -62,10 +71,21 @@ class Page extends React.Component<Props, State> {
                 mainContent = <SignUp emitPageJump={this.handlePageJump}/>;
                 break;
             case PageState.Home:
-                mainContent = <Home userName={this.state.userName}/>;
+                mainContent = <Home userName={this.state.userName} jump={this.handlePageJump} handleProductRequest={this.handleProductRequest}/>;
                 break;
             case PageState.New_Product:
-                mainContent = <NewProduct username={this.state.userName}  jump={this.handlePageJump}/>;
+                mainContent = <NewProduct username={this.state.userName}  jump={this.handlePageJump} handleProductRequest={this.handleProductRequest}/>;
+                break;
+            case PageState.Product:
+                mainContent = <Product
+                    img_src={this.state.product.img_src}
+                    book_name={this.state.product.book_name}
+                    book_class={this.state.product.book_class}
+                    original_price={this.state.product.original_price}
+                    current_price={this.state.product.current_price}
+                    description={this.state.product.description}
+                    jump={this.handlePageJump} />;
+                break;
             default:
                 break;
         }

@@ -1,5 +1,5 @@
 import axios, {AxiosResponse} from 'axios'
-import {async} from "q";
+import {async, timeout} from "q";
 
 
 export function login(username: string, password: string) {
@@ -47,7 +47,8 @@ export interface Product {
     image : File,
     book_class : string,
     description : string,
-    seller: string
+    seller: string,
+    timestamp: string
 }
 
 export function uploadProductInfo(book : Product) {
@@ -58,7 +59,7 @@ export function uploadProductInfo(book : Product) {
     formData.append('curPrice', book.curPrice.toString());
     formData.append('book_class', book.book_class);
     formData.append('description', book.description);
-    formData.append('timestamp', Date.now().toString());
+    formData.append('timestamp', book.timestamp);
     formData.append('seller', book.seller);
 
     return axios.post('/newbook/', formData, {

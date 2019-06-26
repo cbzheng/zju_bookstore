@@ -5,7 +5,9 @@ import Recommend from "./recommend";
 import RecommendBar from "./present/recommendBar";
 
 interface Props {
-    userName: string
+    userName: string,
+    jump: Function,
+    handleProductRequest: Function
 }
 
 
@@ -23,7 +25,7 @@ function Home(props: Props) {
                         <Recommend />
                     </Col>
                 </Row>
-                <RecommendBar username={props.userName}/>
+                <RecommendBar username={props.userName} jump={props.jump} handleProductRequest={props.handleProductRequest}/>
                 <Row>
 
                 </Row>

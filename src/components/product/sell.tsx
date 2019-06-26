@@ -10,7 +10,8 @@ import PageState from "../../utils/page-state";
 
 export interface Props {
     username: string,
-    jump: Function
+    jump: Function,
+    handleProductRequest: Function
 }
 
 function sleep(ms : number) {
@@ -30,6 +31,7 @@ function NewProduct(props: Props) {
     const [description, setDescription] = useState('');
     const [inform, setInform] = useState(<></>);
     const [update, setUpdate] = useState(false);
+    const [timestamp, setTimestamp] = useState('');
 
     // the options for book categories
     let category:any = [];
@@ -53,6 +55,7 @@ function NewProduct(props: Props) {
             console.log(bookClass);
 
             // emit to the server
+            setTimestamp(Date.now().toString());
             let result = await uploadProductInfo({
                 book_name: bookName,
                 originPrice: originPrice,
@@ -60,7 +63,8 @@ function NewProduct(props: Props) {
                 description: description,
                 image: pictures[0],
                 book_class: bookClass,
-                seller: props.username
+                seller: props.username,
+                timestamp: timestamp
             });
 
             if (result) {
@@ -76,9 +80,18 @@ function NewProduct(props: Props) {
                         />
                         发布成功，前往商品页...
                     </Button>
-                )
+                );
                 await sleep(1000);
-                props.jump(PageState.Home)
+                props.handleProductRequest({
+                    img_src: '/img/' + timestamp,
+                    book_name: bookName,
+                    book_class: bookClass,
+                    original_price: originPrice,
+                    current_price: curPrice,
+                    description: description,
+                    jump: props.jump,
+                });
+                props.jump(PageState.Product)
             }
         }
     }

@@ -5,7 +5,8 @@ enum PageState {
     New_Product,
     Message,
     Category,
-    Profile
+    Profile,
+    Product
 }
 
 export default PageState;
