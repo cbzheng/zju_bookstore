@@ -38,7 +38,7 @@ export const basicProduct: ProductProps = {
 
 // new Feature in React: Hoop
 // this is for a single page of one product
-function Product(props: ProductProps) {
+function Product(props: Props) {
 
     const curProduct = useContext(ProductContext);
 
@@ -49,10 +49,11 @@ function Product(props: ProductProps) {
     const user = useContext(UserContext);
     let updateForm = <UpdateBook
         setUpdate={ setUpdate}
+        handleProductChange={props.handleProductRequest}
     />;
 
     let actionButton = <Button>联系卖家</Button>;
-    if (user.userName === props.seller) {
+    if (user.userName === curProduct.seller) {
         actionButton = <Button onClick={()=>{setUpdate(true)}}>修改信息</Button>
     }
 

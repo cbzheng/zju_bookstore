@@ -28,7 +28,7 @@ export const myProduct: ProductInfo = {
     original_price: 0,
     current_price: 0,
     description: 'string',
-    seller: 'root'
+    seller: 'root',
 };
 
 export default ProductContext;

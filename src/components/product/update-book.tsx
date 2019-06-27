@@ -6,7 +6,8 @@ import Category from '../../utils/category'
 import ProductContext, {myProduct, ProductInfo} from '../../context/product-context'
 
 export interface ProductProps {
-    setUpdate: Function
+    setUpdate: Function,
+    handleProductChange: Function
 }
 
 function UpdateBook(props: ProductProps) {
@@ -31,7 +32,17 @@ function UpdateBook(props: ProductProps) {
             event.stopPropagation();
         } else {
             setValidated(true);
-            props.setUpdate(false)
+            props.handleProductChange({
+                img_src: curProduct.img_src,
+                book_name: bookName,
+                book_class: bookClass,
+                original_price: originPrice,
+                current_price: curPrice,
+                description: description,
+                seller: curProduct.seller,
+            })
+            props.setUpdate(false);
+
         }
     }
 

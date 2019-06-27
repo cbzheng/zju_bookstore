@@ -56,6 +56,22 @@ class Page extends React.Component<Props, State> {
         }))
     }
 
+    handleProductUpdate = (s : ProductInfo): void => {
+        console.log(s);
+        this.setState((state)=>({
+            curProduct: {
+                img_src: s.img_src,
+                book_name: s.book_name,
+                book_class: s.book_class,
+                original_price: s.original_price,
+                current_price: s.current_price,
+                description: s.description,
+                seller: s.seller
+            }
+        }))
+    }
+
+
     // top level handler
     handleProductRequest = (s: ProductProps): void => {
         this.setState((state) => ({
@@ -71,6 +87,7 @@ class Page extends React.Component<Props, State> {
                 current_price: s.current_price,
                 description: s.description,
                 seller: s.seller,
+                handleUpdate: this.handleProductUpdate
             }
         }))
     }
@@ -96,14 +113,10 @@ class Page extends React.Component<Props, State> {
                 break;
             case PageState.Product:
                 mainContent = <Product
-                    img_src={this.state.product.img_src}
-                    book_name={this.state.product.book_name}
-                    book_class={this.state.product.book_class}
-                    original_price={this.state.product.original_price}
-                    current_price={this.state.product.current_price}
-                    description={this.state.product.description}
-                    seller={this.state.product.seller}
-                    jump={this.handlePageJump}/>;
+
+                    jump={this.handlePageJump}
+                    handleProductRequest={this.handleProductUpdate}
+                />;
                 break;
             default:
                 break;
