@@ -3,6 +3,8 @@ import {Card, Image, Badge, Button} from 'react-bootstrap'
 import {useState} from "react";
 import {useContext} from "react";
 import UserContext from "../../context/user-context";
+import UpdateBook from "./update-book";
+import ProductContext, {myProduct, ProductInfo} from '../../context/product-context'
 
 // Very import Props definition
 // book information: 1. list. 2. Props. 2. Product
@@ -15,6 +17,11 @@ export interface ProductProps {
     description: string,
     seller: string,
     jump: Function
+}
+
+export interface Props {
+    jump: Function,
+    handleProductRequest: Function,
 }
 
 export const basicProduct: ProductProps = {
@@ -33,19 +40,27 @@ export const basicProduct: ProductProps = {
 // this is for a single page of one product
 function Product(props: ProductProps) {
 
-    const [bookName, setBookName] = useState(props.book_name);
-    const [description, setDescription] = useState(props.description);
-    const user = useContext(UserContext);
+    const curProduct = useContext(ProductContext);
 
-    let actionButton = <Button>联系卖家</Button>
+    const [bookName, setBookName] = useState(curProduct.book_name);
+    const [description, setDescription] = useState(curProduct.description);
+    const [update, setUpdate] =useState(false);
+
+    const user = useContext(UserContext);
+    let updateForm = <UpdateBook
+        setUpdate={ setUpdate}
+    />;
+
+    let actionButton = <Button>联系卖家</Button>;
     if (user.userName === props.seller) {
-        actionButton = <Button>修改信息</Button>
+        actionButton = <Button onClick={()=>{setUpdate(true)}}>修改信息</Button>
     }
+
 
     return (
         <div style={{marginLeft: '10%', marginRight: '10%', marginTop: '5%', display: 'flex', flexWrap: 'wrap'}}>
             <div style={{width: '300px', height: '400px'}}>
-                <Image src={props.img_src} style={{
+                <Image src={curProduct.img_src} style={{
                     width: '100%',
                     height: '100%',
                     border: '1.5px solid',
@@ -56,7 +71,7 @@ function Product(props: ProductProps) {
             <div style={{marginLeft: '5%', minWidth: '55%', maxWidth: '60%'}}>
                 <p style={{fontSize: '25px'}}>
                     {bookName}
-                      <Badge variant="danger" pill style={{fontSize: '15px'}}>{props.book_class}</Badge>
+                      <Badge variant="danger" pill style={{fontSize: '15px'}}>{curProduct.book_class}</Badge>
                 </p>
                 <div style={{marginBottom: '3%'}}>
                     <Card>
@@ -67,12 +82,12 @@ function Product(props: ProductProps) {
                         </div>
                         <Card.Body>
                             <div style={{color: '#db222f', fontSize: '30px'}}>
-                                <span style={{fontSize: '26px'}}>¥</span>{props.current_price} <s
-                                style={{fontSize: '20px', color: 'gray'}}>¥{props.original_price}</s>
+                                <span style={{fontSize: '26px'}}>¥</span>{curProduct.current_price} <s
+                                style={{fontSize: '20px', color: 'gray'}}>¥{curProduct.original_price}</s>
                             </div>
                             <div style={{ fontSize: '15px', color: 'gray'}}>
                                 <p>
-                                卖家: {props.seller}
+                                卖家: {curProduct.seller}
                                 </p>
                             </div>
                         </Card.Body>
@@ -88,8 +103,16 @@ function Product(props: ProductProps) {
 
                 </Card>
                 <div style={{ marginTop:"3%"}}>
-                    {actionButton}
+                    {
+                        ! update &&
+                        actionButton
+                    }
+                    {
+                        update &&
+                        updateForm
+                    }
                 </div>
+
             </div>
         </div>
     )

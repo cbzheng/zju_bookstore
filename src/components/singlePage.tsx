@@ -7,6 +7,7 @@ import Home from "./home";
 import NewProduct from "./product/sell";
 import Product, {ProductProps, basicProduct} from "./product/product";
 import UserContext from '../context/user-context'
+import ProductContext, {myProduct, ProductInfo} from '../context/product-context'
 
 export interface Props {
     isLogin: boolean
@@ -18,7 +19,8 @@ export interface State {
     isLogin: boolean,
     pageState: PageState,
     userName: string
-    product: ProductProps
+    product: ProductProps,
+    curProduct: ProductInfo
 }
 
 class Page extends React.Component<Props, State> {
@@ -29,7 +31,8 @@ class Page extends React.Component<Props, State> {
             isLogin: props.isLogin,
             pageState: PageState.Login,
             userName: '',
-            product: basicProduct
+            product: basicProduct,
+            curProduct: myProduct
         };
     }
 
@@ -56,7 +59,19 @@ class Page extends React.Component<Props, State> {
     // top level handler
     handleProductRequest = (s: ProductProps): void => {
         this.setState((state) => ({
-            product: s
+            // TODO delete the deeper props
+            product: s,
+
+            // TODO use Context fully substitute
+            curProduct: {
+                img_src: s.img_src,
+                book_name: s.book_name,
+                book_class: s.book_class,
+                original_price: s.original_price,
+                current_price: s.current_price,
+                description: s.description,
+                seller: s.seller,
+            }
         }))
     }
 
@@ -72,10 +87,12 @@ class Page extends React.Component<Props, State> {
                 mainContent = <SignUp emitPageJump={this.handlePageJump}/>;
                 break;
             case PageState.Home:
-                mainContent = <Home userName={this.state.userName} jump={this.handlePageJump} handleProductRequest={this.handleProductRequest}/>;
+                mainContent = <Home userName={this.state.userName} jump={this.handlePageJump}
+                                    handleProductRequest={this.handleProductRequest}/>;
                 break;
             case PageState.New_Product:
-                mainContent = <NewProduct username={this.state.userName}  jump={this.handlePageJump} handleProductRequest={this.handleProductRequest}/>;
+                mainContent = <NewProduct username={this.state.userName} jump={this.handlePageJump}
+                                          handleProductRequest={this.handleProductRequest}/>;
                 break;
             case PageState.Product:
                 mainContent = <Product
@@ -86,78 +103,86 @@ class Page extends React.Component<Props, State> {
                     current_price={this.state.product.current_price}
                     description={this.state.product.description}
                     seller={this.state.product.seller}
-                    jump={this.handlePageJump} />;
+                    jump={this.handlePageJump}/>;
                 break;
             default:
                 break;
         }
 
         return (
+
             <div style={{display: 'flex', flexDirection: 'column'}}>
-                <UserContext.Provider value={{ userName: this.state.userName, isLogin: this.state.isLogin }}>
-                <Navbar bg="light" expand="lg">
-                    <Navbar.Brand href="#home" onClick={() => this.handlePageJump(PageState.Home)}>ZJU
-                        Bookstore</Navbar.Brand>
-                    <Navbar.Toggle aria-controls="basic-navbar-nav"/>
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="mr-auto">
+                <UserContext.Provider value={{userName: this.state.userName, isLogin: this.state.isLogin}}>
+                    <Navbar bg="light" expand="lg">
+                        <Navbar.Brand href="#home" onClick={() => this.handlePageJump(PageState.Home)}>ZJU
+                            Bookstore</Navbar.Brand>
+                        <Navbar.Toggle aria-controls="basic-navbar-nav"/>
+                        <Navbar.Collapse id="basic-navbar-nav">
+                            <Nav className="mr-auto">
 
-                            {
-                                // show LOGIN and SIGNUP only when the user has logged in
-                                !this.state.isLogin &&
-                                <>
-                                    <Nav.Link href="#login" onClick={() => this.handlePageJump(PageState.Login)}>
-                                        登录
-                                    </Nav.Link>
-                                    <Nav.Link href="#signup" onClick={() => this.handlePageJump(PageState.SignUp)}>
-                                        注册
-                                    </Nav.Link>
+                                {
+                                    // show LOGIN and SIGNUP only when the user has logged in
+                                    !this.state.isLogin &&
+                                    <>
+                                        <Nav.Link href="#login" onClick={() => this.handlePageJump(PageState.Login)}>
+                                            登录
+                                        </Nav.Link>
+                                        <Nav.Link href="#signup" onClick={() => this.handlePageJump(PageState.SignUp)}>
+                                            注册
+                                        </Nav.Link>
 
-                                </>
+                                    </>
 
-                            }
-                            {
-                                this.state.isLogin &&
-                                <>
-                                    <Nav.Link href="#new" onClick={() => this.handlePageJump(PageState.New_Product)}>
-                                        发布商品
-                                    </Nav.Link>
-                                    <Nav.Link href="#msg" onClick={() => this.handlePageJump(PageState.Message)}>
-                                        消息
-                                    </Nav.Link>
-                                    <Nav.Link href="#profile" onClick={() => this.handlePageJump(PageState.Profile)}>
-                                        个人中心
-                                    </Nav.Link>
-                                    <Nav.Link href="#profile" onClick={() => { this.ExitLogin();  this.handlePageJump(PageState.Login)}}>
-                                        退出登录
-                                    </Nav.Link>
-                                </>
-                            }
+                                }
+                                {
+                                    this.state.isLogin &&
+                                    <>
+                                        <Nav.Link href="#new"
+                                                  onClick={() => this.handlePageJump(PageState.New_Product)}>
+                                            发布商品
+                                        </Nav.Link>
+                                        <Nav.Link href="#msg" onClick={() => this.handlePageJump(PageState.Message)}>
+                                            消息
+                                        </Nav.Link>
+                                        <Nav.Link href="#profile"
+                                                  onClick={() => this.handlePageJump(PageState.Profile)}>
+                                            个人中心
+                                        </Nav.Link>
+                                        <Nav.Link href="#profile" onClick={() => {
+                                            this.ExitLogin();
+                                            this.handlePageJump(PageState.Login)
+                                        }}>
+                                            退出登录
+                                        </Nav.Link>
+                                    </>
+                                }
 
-                        </Nav>
-                        <Form inline>
-                            <FormControl type="text" placeholder="Search" className="mr-sm-2"/>
-                            <Button variant="outline-success">搜索</Button>
-                        </Form>
-                    </Navbar.Collapse>
-                </Navbar>
+                            </Nav>
+                            <Form inline>
+                                <FormControl type="text" placeholder="Search" className="mr-sm-2"/>
+                                <Button variant="outline-success">搜索</Button>
+                            </Form>
+                        </Navbar.Collapse>
+                    </Navbar>
 
-                {mainContent}
+                    <ProductContext.Provider value={this.state.curProduct}>
+                        {mainContent}
+                    </ProductContext.Provider>
 
-                <div style={{marginTop:'8%'}}>
-                    <Jumbotron fluid>
+                    <div style={{marginTop: '8%'}}>
+                        <Jumbotron fluid>
 
-                        <Container>
-                            <h3>ZJU 旧书交易平台</h3>
+                            <Container>
+                                <h3>ZJU 旧书交易平台</h3>
 
-                            <p>
-                                在这里交换知识
-                            </p>
-                            <hr></hr>
-                            &copy; {new Date().getFullYear()} Copyright
-                        </Container>
-                    </Jumbotron>
-                </div>
+                                <p>
+                                    在这里交换知识
+                                </p>
+                                <hr></hr>
+                                &copy; {new Date().getFullYear()} Copyright
+                            </Container>
+                        </Jumbotron>
+                    </div>
                 </UserContext.Provider>
             </div>
         );
