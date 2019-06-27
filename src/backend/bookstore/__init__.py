@@ -10,6 +10,14 @@ def create_app(test_config=None):
     app = Flask(__name__)
     db = MongoDB()
 
+    @app.route('/user/<username>/sell/', methods=['GET'])
+    def userSell(username):
+        return db.get_user_sell(username)
+
+    @app.route('/server/search/<name>/', methods=['GET'])
+    def search(name):
+        return db.get_books_by_name(name)
+
     @app.route('/recommend/<username>', methods=['GET'])
     def recommend(username):
         print('User Name', username)

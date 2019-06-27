@@ -5,9 +5,11 @@ import PageState from '../utils/page-state'
 import SignUp from "./signUp";
 import Home from "./home";
 import NewProduct from "./product/sell";
-import Product, {ProductProps, basicProduct} from "./product/product";
+import Product, {basicProduct, ProductProps} from "./product/product";
 import UserContext from '../context/user-context'
 import ProductContext, {myProduct, ProductInfo} from '../context/product-context'
+import Profile from "./profile";
+import SearchResult from "./present/search-book";
 
 export interface Props {
     isLogin: boolean
@@ -20,7 +22,9 @@ export interface State {
     pageState: PageState,
     userName: string
     product: ProductProps,
-    curProduct: ProductInfo
+    curProduct: ProductInfo,
+    searchValue: string,
+    mainContent: JSX.Element
 }
 
 class Page extends React.Component<Props, State> {
@@ -32,7 +36,9 @@ class Page extends React.Component<Props, State> {
             pageState: PageState.Login,
             userName: '',
             product: basicProduct,
-            curProduct: myProduct
+            curProduct: myProduct,
+            searchValue: '',
+            mainContent: <></>
         };
     }
 
@@ -41,6 +47,12 @@ class Page extends React.Component<Props, State> {
         this.setState((state) => ({
             userName: name,
             isLogin: true
+        }))
+    }
+
+    handleSearchValue = (book: string): void => {
+        this.setState((state) => ({
+            searchValue: book
         }))
     }
 
@@ -56,9 +68,9 @@ class Page extends React.Component<Props, State> {
         }))
     }
 
-    handleProductUpdate = (s : ProductInfo): void => {
+    handleProductUpdate = (s: ProductInfo): void => {
         console.log(s);
-        this.setState((state)=>({
+        this.setState((state) => ({
             curProduct: {
                 img_src: s.img_src,
                 book_name: s.book_name,
@@ -94,9 +106,13 @@ class Page extends React.Component<Props, State> {
         }))
     }
 
+    handleSearch = (): void => {
+        this.handlePageJump(PageState.SearchResult);
+    }
+
     render(): React.ReactNode {
 
-        let mainContent;
+        let mainContent = this.state.mainContent;
 
         switch (this.state.pageState) {
             case PageState.Login:
@@ -115,10 +131,19 @@ class Page extends React.Component<Props, State> {
                 break;
             case PageState.Product:
                 mainContent = <Product
-
                     jump={this.handlePageJump}
                     handleProductRequest={this.handleProductUpdate}
                 />;
+                break;
+            case PageState.Profile:
+                mainContent = <Profile jump={this.handlePageJump} handleProductRequest={this.handleProductRequest}/>
+                break;
+            case PageState.SearchResult:
+                console.log('jump search')
+                mainContent = <SearchResult username={this.state.userName}
+                              bookname={this.state.searchValue}
+                              jump={this.handlePageJump}
+                              handleProductRequest={this.handleProductRequest}/>;
                 break;
             default:
                 break;
@@ -174,8 +199,15 @@ class Page extends React.Component<Props, State> {
 
                             </Nav>
                             <Form inline>
-                                <FormControl type="text" placeholder="Search" className="mr-sm-2"/>
-                                <Button variant="outline-success">搜索</Button>
+                                <FormControl
+                                    type="text"
+                                    placeholder="Search"
+                                    className="mr-sm-2"
+                                    value={this.state.searchValue}
+                                    onChange={(e: any) => {
+                                        this.handleSearchValue(e.target.value)
+                                    }}/>
+                                <Button variant="outline-success" onClick={this.handleSearch}>搜索</Button>
                             </Form>
                         </Navbar.Collapse>
                     </Navbar>

@@ -6,7 +6,8 @@ enum PageState {
     Message,
     Category,
     Profile,
-    Product
+    Product,
+    SearchResult
 }
 
 export default PageState;

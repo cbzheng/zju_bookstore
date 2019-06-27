@@ -2,6 +2,7 @@ import mongoengine as mg
 from db.user import Users
 from db.book import Books
 from mongoengine.queryset.visitor import Q
+from flask import jsonify
 
 
 class MongoDB():
@@ -11,7 +12,7 @@ class MongoDB():
     def add_user(self, username, email, password):
         if Users.objects(user_name=username):
             return False
-        user = Users(user_name=username, email=email, password=password )
+        user = Users(user_name=username, email=email, password=password)
         user.save()
         return True
 
@@ -34,13 +35,49 @@ class MongoDB():
         book.save()
         return True
 
-    def update_book(self,book_name, originPrice, curPrice, book_class, description, timestamp, seller):
+    def update_book(self, book_name, originPrice, curPrice, book_class, description, timestamp, seller):
         book = Books.objects.get(timestamp=timestamp)
-    
+
         book.update(
-            book_name = book_name,
-            book_class = book_class,
-            description = description,
-            originPrice = originPrice,
-            curPrice = curPrice
+            book_name=book_name,
+            book_class=book_class,
+            description=description,
+            originPrice=originPrice,
+            curPrice=curPrice
         )
+
+    def get_user_sell(self, user_name):
+        books = Books.objects(seller=user_name)
+
+        # form response
+        response = []
+        for book in books:
+            response.append({
+                'timestamp': book.timestamp,
+                'book_name': book.book_name,
+                'originPrice': book.originPrice,
+                'curPrice': book.curPrice,
+                'book_class': book.book_class,
+                'description': book.description,
+                'seller': book.seller
+            })
+
+        return jsonify({'sell_books': [response]})
+
+    def get_books_by_name(self, book_name):
+        books = Books.objects(book_name__icontains=book_name)
+
+        # form response
+        response = []
+        for book in books:
+            response.append({
+                'timestamp': book.timestamp,
+                'book_name': book.book_name,
+                'originPrice': book.originPrice,
+                'curPrice': book.curPrice,
+                'book_class': book.book_class,
+                'description': book.description,
+                'seller': book.seller
+            })
+
+        return jsonify({'result': [response]})

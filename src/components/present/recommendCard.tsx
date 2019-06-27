@@ -14,17 +14,17 @@ export interface Props {
     timestamp: string
     jump: Function,
     seller: string
-    handleProductRequest : Function
+    handleProductRequest : Function,
+    width: string,
+    height: string
 }
 
 function RecommendCard(props: Props) {
 
-
-
     return (
-        <div>
+        <div style={{marginBottom: '10px'}}>
             <Card>
-                <div style={{width: '240px', height: '300px'}}>
+                <div style={{width: props.width, height: props.height}}>
 
                     <Image style={{maxWidth: '240', width: '100%', height: '100%'}} src={props.img_src}/>
                 </div>
@@ -61,7 +61,7 @@ function RecommendCard(props: Props) {
                     </Card.Text>
                 </Card.Body>
                 <Card.Footer>
-                    <div style={{width: '200px', height: '20px'}}>
+                    <div style={{width: props.width, height: '20px'}}>
                         <p
                             className="text-muted"
                             style={{

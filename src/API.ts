@@ -110,6 +110,26 @@ export function getRecommendBooks(name: string) {
     })
 }
 
+// Get Recommend books
+export function getOnSell(name: string) {
+    if (name === ''){
+        name = '__normal'
+    }
+    return axios.get('/user/' + name + '/sell/').then((response)=>{
+        return response.data;
+    })
+}
+
+// Get Recommend books
+export function getSearchResult(name: string) {
+    if (name === ''){
+        name = '__normal'
+    }
+    return axios.get('/server/search/' + name + '/').then((response)=>{
+        return response.data;
+    })
+}
+
 // Get Book Image
 export function getBookImg(timestamp: string) {
     return axios.get('/img/'+timestamp)
