@@ -1,6 +1,8 @@
 import * as React from 'react'
-import {Card, Image} from 'react-bootstrap'
+import {Card, Image, Badge, Button} from 'react-bootstrap'
 import {useState} from "react";
+import {useContext} from "react";
+import UserContext from "../../context/user-context";
 
 // Very import Props definition
 // book information: 1. list. 2. Props. 2. Product
@@ -11,6 +13,7 @@ export interface ProductProps {
     original_price: number,
     current_price: number,
     description: string,
+    seller: string,
     jump: Function
 }
 
@@ -21,6 +24,7 @@ export const basicProduct: ProductProps = {
     original_price: 0,
     current_price: 0,
     description: 'string',
+    seller: 'root',
     jump: () => {
     }
 };
@@ -31,7 +35,12 @@ function Product(props: ProductProps) {
 
     const [bookName, setBookName] = useState(props.book_name);
     const [description, setDescription] = useState(props.description);
+    const user = useContext(UserContext);
 
+    let actionButton = <Button>联系卖家</Button>
+    if (user.userName === props.seller) {
+        actionButton = <Button>修改信息</Button>
+    }
 
     return (
         <div style={{marginLeft: '10%', marginRight: '10%', marginTop: '5%', display: 'flex', flexWrap: 'wrap'}}>
@@ -44,8 +53,11 @@ function Product(props: ProductProps) {
                     padding: '2%'
                 }}/>
             </div>
-            <div style={{marginLeft: '5%', minWidth: '55%', maxWidth: '60%', marginTop: '1%'}}>
-                <p style={{fontSize: '25px'}}> {bookName} </p>
+            <div style={{marginLeft: '5%', minWidth: '55%', maxWidth: '60%'}}>
+                <p style={{fontSize: '25px'}}>
+                    {bookName}
+                      <Badge variant="danger" pill style={{fontSize: '15px'}}>{props.book_class}</Badge>
+                </p>
                 <div style={{marginBottom: '3%'}}>
                     <Card>
                         <div style={{background: 'linear-gradient(to right, #FF4E50, #F9D423)'}}>
@@ -57,6 +69,11 @@ function Product(props: ProductProps) {
                             <div style={{color: '#db222f', fontSize: '30px'}}>
                                 <span style={{fontSize: '26px'}}>¥</span>{props.current_price} <s
                                 style={{fontSize: '20px', color: 'gray'}}>¥{props.original_price}</s>
+                            </div>
+                            <div style={{ fontSize: '15px', color: 'gray'}}>
+                                <p>
+                                卖家: {props.seller}
+                                </p>
                             </div>
                         </Card.Body>
                     </Card>
@@ -70,6 +87,9 @@ function Product(props: ProductProps) {
                     </Card.Body>
 
                 </Card>
+                <div style={{ marginTop:"3%"}}>
+                    {actionButton}
+                </div>
             </div>
         </div>
     )

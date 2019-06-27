@@ -3,6 +3,7 @@ import {Container, Row, Col} from 'react-bootstrap'
 import Sidebar from "./sidebar";
 import Recommend from "./recommend";
 import RecommendBar from "./present/recommendBar";
+import UserContext from '../context/user-context'
 
 interface Props {
     userName: string,

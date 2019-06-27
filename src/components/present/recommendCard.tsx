@@ -1,7 +1,8 @@
 import * as React from 'react'
 import {Button, Card, Image} from 'react-bootstrap'
 import PageState from "../../utils/page-state";
-
+import UserContext from '../../context/user-context'
+import {useContext} from "react";
 
 export interface Props {
     img_src: string,
@@ -11,6 +12,7 @@ export interface Props {
     current_price: number,
     description: string,
     jump: Function,
+    seller: string
     handleProductRequest : Function
 }
 
@@ -46,6 +48,7 @@ function RecommendCard(props: Props) {
                                     original_price: props.original_price,
                                     current_price: props.current_price,
                                     description: props.description,
+                                    seller: props.seller,
                                     jump: props.jump,
                                 });
                                 props.jump(PageState.Product)

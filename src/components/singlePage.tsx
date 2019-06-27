@@ -6,6 +6,7 @@ import SignUp from "./signUp";
 import Home from "./home";
 import NewProduct from "./product/sell";
 import Product, {ProductProps, basicProduct} from "./product/product";
+import UserContext from '../context/user-context'
 
 export interface Props {
     isLogin: boolean
@@ -84,6 +85,7 @@ class Page extends React.Component<Props, State> {
                     original_price={this.state.product.original_price}
                     current_price={this.state.product.current_price}
                     description={this.state.product.description}
+                    seller={this.state.product.seller}
                     jump={this.handlePageJump} />;
                 break;
             default:
@@ -92,6 +94,7 @@ class Page extends React.Component<Props, State> {
 
         return (
             <div style={{display: 'flex', flexDirection: 'column'}}>
+                <UserContext.Provider value={{ userName: this.state.userName, isLogin: this.state.isLogin }}>
                 <Navbar bg="light" expand="lg">
                     <Navbar.Brand href="#home" onClick={() => this.handlePageJump(PageState.Home)}>ZJU
                         Bookstore</Navbar.Brand>
@@ -155,6 +158,7 @@ class Page extends React.Component<Props, State> {
                         </Container>
                     </Jumbotron>
                 </div>
+                </UserContext.Provider>
             </div>
         );
     }

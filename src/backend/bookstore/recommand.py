@@ -16,6 +16,7 @@ def get_recommend_books(user_name, db):
             'curPrice': book.curPrice,
             'book_class': book.book_class,
             'description': book.description,
+            'seller': book.seller
         })
 
     return jsonify({'recommend': [response]})
