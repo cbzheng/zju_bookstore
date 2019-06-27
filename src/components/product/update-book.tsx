@@ -4,6 +4,7 @@ import ImageUploader from "./sell";
 import {useContext, useState} from "react";
 import Category from '../../utils/category'
 import ProductContext, {myProduct, ProductInfo} from '../../context/product-context'
+import {updateBook, uploadProductInfo} from "../../API";
 
 export interface ProductProps {
     setUpdate: Function,
@@ -32,6 +33,7 @@ function UpdateBook(props: ProductProps) {
             event.stopPropagation();
         } else {
             setValidated(true);
+            console.log(curProduct.timestamp);
             props.handleProductChange({
                 img_src: curProduct.img_src,
                 book_name: bookName,
@@ -40,7 +42,19 @@ function UpdateBook(props: ProductProps) {
                 current_price: curPrice,
                 description: description,
                 seller: curProduct.seller,
-            })
+                timestamp: curProduct.timestamp
+            });
+
+            updateBook({
+                book_name: bookName,
+                originPrice: originPrice,
+                curPrice: curPrice,
+                description: description,
+                book_class: bookClass,
+                seller: curProduct.seller,
+                timestamp: curProduct.timestamp
+            });
+
             props.setUpdate(false);
 
         }

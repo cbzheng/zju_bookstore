@@ -33,3 +33,14 @@ class MongoDB():
                      seller=seller)
         book.save()
         return True
+
+    def update_book(self,book_name, originPrice, curPrice, book_class, description, timestamp, seller):
+        book = Books.objects.get(timestamp=timestamp)
+    
+        book.update(
+            book_name = book_name,
+            book_class = book_class,
+            description = description,
+            originPrice = originPrice,
+            curPrice = curPrice
+        )

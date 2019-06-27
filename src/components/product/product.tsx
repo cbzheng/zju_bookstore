@@ -16,6 +16,7 @@ export interface ProductProps {
     current_price: number,
     description: string,
     seller: string,
+    timestamp: string
     jump: Function
 }
 
@@ -32,6 +33,7 @@ export const basicProduct: ProductProps = {
     current_price: 0,
     description: 'string',
     seller: 'root',
+    timestamp: '',
     jump: () => {
     }
 };
@@ -71,7 +73,7 @@ function Product(props: Props) {
             </div>
             <div style={{marginLeft: '5%', minWidth: '55%', maxWidth: '60%'}}>
                 <p style={{fontSize: '25px'}}>
-                    {bookName}
+                    {curProduct.book_name}
                       <Badge variant="danger" pill style={{fontSize: '15px'}}>{curProduct.book_class}</Badge>
                 </p>
                 <div style={{marginBottom: '3%'}}>
@@ -98,7 +100,7 @@ function Product(props: Props) {
                     <Card.Body>
                         <Card.Title>书籍简介</Card.Title>
                         <Card.Text>
-                            {description}
+                            {curProduct.description}
                         </Card.Text>
                     </Card.Body>
 

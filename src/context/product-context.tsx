@@ -9,6 +9,7 @@ export interface ProductInfo {
     current_price: number,
     description: string,
     seller: string,
+    timestamp: string
 }
 
 const ProductContext = React.createContext({
@@ -19,6 +20,7 @@ const ProductContext = React.createContext({
     current_price: 0,
     description: '',
     seller: '',
+    timestamp: ''
 })
 
 export const myProduct: ProductInfo = {
@@ -29,6 +31,7 @@ export const myProduct: ProductInfo = {
     current_price: 0,
     description: 'string',
     seller: 'root',
+    timestamp: ''
 };
 
 export default ProductContext;

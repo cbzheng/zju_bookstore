@@ -66,7 +66,8 @@ class Page extends React.Component<Props, State> {
                 original_price: s.original_price,
                 current_price: s.current_price,
                 description: s.description,
-                seller: s.seller
+                seller: s.seller,
+                timestamp: s.timestamp
             }
         }))
     }
@@ -87,6 +88,7 @@ class Page extends React.Component<Props, State> {
                 current_price: s.current_price,
                 description: s.description,
                 seller: s.seller,
+                timestamp: s.timestamp,
                 handleUpdate: this.handleProductUpdate
             }
         }))

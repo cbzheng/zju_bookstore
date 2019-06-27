@@ -11,6 +11,7 @@ export interface Props {
     original_price: number,
     current_price: number,
     description: string,
+    timestamp: string
     jump: Function,
     seller: string
     handleProductRequest : Function
@@ -49,6 +50,7 @@ function RecommendCard(props: Props) {
                                     current_price: props.current_price,
                                     description: props.description,
                                     seller: props.seller,
+                                    timestamp: props.timestamp,
                                     jump: props.jump,
                                 });
                                 props.jump(PageState.Product)

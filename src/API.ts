@@ -41,10 +41,21 @@ export function signup(username: string, email:string, password: string) {
 
 // new Product
 export interface Product {
+
     book_name : string,
     originPrice : Number,
     curPrice : Number,
     image : File,
+    book_class : string,
+    description : string,
+    seller: string,
+    timestamp: string
+}
+
+export interface updateProduct {
+    book_name : string,
+    originPrice : Number,
+    curPrice : Number,
     book_class : string,
     description : string,
     seller: string,
@@ -69,6 +80,24 @@ export function uploadProductInfo(book : Product) {
     }).then((response)=>{
         return !!response.data.result;
     })
+}
+
+export function updateBook(book : updateProduct) {
+
+    console.log(book);
+    axios.post('/update/book/', {
+        book_name: book.book_name,
+        originPrice: book.originPrice,
+        curPrice: book.curPrice,
+        book_class: book.book_class,
+        description: book.description,
+        timestamp: book.timestamp,
+        seller: book.seller
+    }).then((response)=>{
+        console.log(response.data);
+    }).catch(reason => {
+    });
+
 }
 
 // Get Recommend books

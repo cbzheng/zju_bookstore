@@ -36,6 +36,18 @@ def create_app(test_config=None):
                 'result': True
             })
 
+    @app.route('/update/book/', methods=['POST'])
+    def update_book():
+        data = request.get_json()
+        db.update_book(data['book_name'],
+                    data['originPrice'],
+                    data['curPrice'],
+                    data['book_class'],
+                    data['description'],
+                    timestamp=data['timestamp'],
+                    seller=data['seller'])
+        return jsonify({})
+
     @app.route('/login/', methods=['POST'])
     def login_store():
         data = request.get_json()
