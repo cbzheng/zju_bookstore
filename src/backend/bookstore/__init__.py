@@ -32,6 +32,10 @@ def create_app(test_config=None):
     def getOrder(stamp):
         return db.get_order(stamp)
 
+    @app.route('/user/getorder/<username>/', methods=['GET'])
+    def userGetOrder(username):
+        return db.get_user_order(username)
+
     @app.route('/user/<username>/sell/', methods=['GET'])
     def userSell(username):
         return db.get_user_sell(username)

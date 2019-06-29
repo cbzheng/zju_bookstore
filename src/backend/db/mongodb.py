@@ -83,6 +83,42 @@ class MongoDB():
             'isFinish': order.isFinish
         })
 
+    # Users order information
+    def get_user_order(self, username):
+        buy_order = Order.objects(buyer=username)
+        sell_order = Order.objects(seller=username)
+
+        # form response
+        buy_order_info = []
+        for order in buy_order:
+            book = Books.objects.get(timestamp=order.book_timestamp)
+            buy_order_info.append({
+                'book_name': book.book_name,
+                'book_class': book.book_class,
+                'order_timestamp': order.order_timestamp,
+                'book_timestamp': order.book_timestamp,
+                'seller': order.seller,
+                'buyer': order.buyer,
+                'price': order.agreePrice,
+                'isFinish': order.isFinish
+            })
+
+        sell_order_info = []
+        for order in sell_order:
+            book = Books.objects.get(timestamp=order.book_timestamp)
+            sell_order_info.append({
+                'book_name': book.book_name,
+                'book_class': book.book_class,
+                'order_timestamp': order.order_timestamp,
+                'book_timestamp': order.book_timestamp,
+                'seller': order.seller,
+                'buyer': order.buyer,
+                'price': order.agreePrice,
+                'isFinish': order.isFinish
+            })
+
+        return jsonify({'sell_order': [sell_order_info], 'buy_order': [buy_order_info]})
+
     def get_book(self, bt):
         book = Books.objects.get(timestamp=bt)
 

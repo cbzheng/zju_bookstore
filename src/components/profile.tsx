@@ -5,6 +5,7 @@ import UserContext from '../context/user-context'
 import {useContext, useState} from "react";
 import OnSell from "./present/on-sell-book";
 import WantList from "./present/want-list";
+import OrderList from "./present/order-list";
 
 export interface Props {
     jump: Function,
@@ -30,7 +31,7 @@ function Profile(props: Props) {
     );
     const order = (
         <div style={{display: 'flex', flexWrap: 'wrap', padding: '10px'}}>
-
+            <OrderList username={user.userName} jump={props.jump} handleProductRequest={props.handleProductRequest}/>
         </div>
     );
     const wantList = (

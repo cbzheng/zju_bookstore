@@ -196,6 +196,15 @@ export function getUserWant(name: string) {
     })
 }
 
+export function getUserOrder(name: string) {
+    if (name === '') {
+        name = '__normal'
+    }
+    return axios.get('/user/getorder/' + name + '/').then((response) => {
+        return response.data;
+    })
+}
+
 // Get Recommend books
 export function getSearchResult(name: string) {
     if (name === '') {

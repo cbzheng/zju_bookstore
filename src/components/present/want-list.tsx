@@ -3,7 +3,7 @@ import 'react-bootstrap'
 // import {Container, Jumbotron, Image, CardDeck} from "react-bootstrap";
 import {useEffect, useState} from "react";
 import { List, Avatar, Button, Skeleton} from 'antd'
-import {getBookImg, getOnSell, getRecommendBooks, getUserWant} from "../../API";
+import {getBookImg, getOnSell, getRecommendBooks, getUserOrder, getUserWant} from "../../API";
 import RecommendCard from "./recommendCard";
 import bookLogo from '../../static/book.png'
 
@@ -40,6 +40,7 @@ function WantList(props: Props) {
                 })
         }
         setWantList(card_list);
+
 
     };
 
