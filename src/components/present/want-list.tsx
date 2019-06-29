@@ -41,7 +41,6 @@ function WantList(props: Props) {
         }
         setWantList(card_list);
 
-
     };
 
     useEffect(() => {

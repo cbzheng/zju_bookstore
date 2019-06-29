@@ -17,6 +17,24 @@ class MongoDB():
         msg = Message(sender=sender, receiver=receiver, content=content, time=time)
         msg.save()
 
+    # count the unread messages
+    def count_unread_msg(self, username):
+        r_msg = Message.objects(receiver=username, isRead=False)
+        num =  r_msg.count()
+        return jsonify({
+            'count': num
+        })
+
+    def read_msg(self, sender, receiver):
+        msg1 = Message.objects(sender=sender)
+        msg2 = Message.objects(sender=receiver)
+        for msg in msg1:
+            msg.update(isRead= True)
+        for msg in msg2:
+            msg.update(isRead=True)
+
+
+
     # look up all the msg of a user
     def lookup_msg(self, username):
         msg_set = {}
@@ -26,18 +44,24 @@ class MongoDB():
             if msg.receiver not in msg_set:
                 msg_set[msg.receiver] = []
             msg_set[msg.receiver].append({
+                'sender': msg.sender,
                 'time': msg.time,
-                'content': msg.content
+                'content': msg.content,
+                'isRead': msg.isRead
             })
         for msg in receiver:
             if msg.sender not in msg_set:
                 msg_set[msg.sender] = []
             msg_set[msg.sender].append({
+                'sender': msg.sender,
                 'time': msg.time,
-                'content': msg.content
+                'content': msg.content,
+                'isRead': msg.isRead
             })
 
         return jsonify(msg_set)
+
+
 
     def add_user(self, username, email, password):
         if Users.objects(user_name=username):

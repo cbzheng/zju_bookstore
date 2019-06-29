@@ -1,5 +1,6 @@
 import axios, {AxiosResponse} from 'axios'
 import {async, timeout} from "q";
+import {func} from "prop-types";
 
 
 export function login(username: string, password: string) {
@@ -218,6 +219,43 @@ export function getSearchResult(name: string) {
 // Get Book Image
 export function getBookImg(timestamp: string) {
     return axios.get('/img/' + timestamp)
+}
+
+export function getUnread(username: string) {
+    return axios.get('/msg/unread/'+username+'/').then((data)=>{
+        return data.data.count
+    })
+}
+
+export function sendMsg(sender:string, receiver: string, content:string) {
+    let currentdate = new Date();
+    let datetime = "Last Sync: " + currentdate.getDate() + "/"
+        + (currentdate.getMonth()+1)  + "/"
+        + currentdate.getFullYear() + " @ "
+        + currentdate.getHours() + ":"
+        + currentdate.getMinutes() + ":"
+        + currentdate.getSeconds();
+    return axios.post('/msg/send/', {
+        sender: sender,
+        receiver: receiver,
+        content: content,
+        time: datetime
+    }).then((data)=>{
+
+    })
+}
+
+export function getAllMsg(username: string) {
+    return axios.get('/msg/lookup/' + username + '/').then((data)=>{
+        return data.data
+    })
+}
+
+export function readMsg(sender: string, receiver: string) {
+    return axios.post('/msg/read/', {
+        sender: sender,
+        receiver: receiver
+    })
 }
 
 export default axios;

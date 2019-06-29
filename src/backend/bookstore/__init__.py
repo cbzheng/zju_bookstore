@@ -10,6 +10,32 @@ def create_app(test_config=None):
     app = Flask(__name__)
     db = MongoDB()
 
+    @app.route('/msg/read/', methods=['POST'])
+    def readMsg():
+        data = request.get_json()
+        db.read_msg(data['sender'], data['receiver'])
+        return jsonify({})
+
+    # router about messages
+    @app.route('/msg/send/', methods=['POST'])
+    def sendMsg():
+        data = request.get_json()
+        db.send_msg(
+            sender=data['sender'],
+            receiver=data['receiver'],
+            content=data['content'],
+            time=data['time']
+        )
+        return jsonify({})
+
+    @app.route('/msg/unread/<username>/', methods=['GET'])
+    def countUnread(username):
+        return db.count_unread_msg(username)
+
+    @app.route('/msg/lookup/<username>/', methods=['GET'])
+    def getAllMsg(username):
+        return db.lookup_msg(username)
+
     @app.route('/neworder/', methods=['POST'])
     def addOrder():
         data = request.get_json()

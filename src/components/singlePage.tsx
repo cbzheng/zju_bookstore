@@ -11,6 +11,9 @@ import ProductContext, {myProduct, ProductInfo} from '../context/product-context
 import Profile from "./profile";
 import SearchResult from "./present/search-book";
 import Want from "./product/want";
+import {getUnread} from "../API";
+import {Badge} from "antd";
+import MsgPage from "./message/msg-page";
 
 export interface Props {
     isLogin: boolean
@@ -26,6 +29,7 @@ export interface State {
     curProduct: ProductInfo,
     searchValue: string,
     mainContent: JSX.Element
+    unreadNum: number
 }
 
 class Page extends React.Component<Props, State> {
@@ -39,8 +43,21 @@ class Page extends React.Component<Props, State> {
             product: basicProduct,
             curProduct: myProduct,
             searchValue: '',
-            mainContent: <></>
+            mainContent: <></>,
+            unreadNum: 0
         };
+    }
+
+    componentDidMount(): void {
+        setInterval(async () => {
+            if (this.state.isLogin){
+                let num = await getUnread(this.state.userName);
+                this.setUnreadNum(num)
+            }
+        }, 5000);
+    }
+
+    componentWillUnmount(): void {
     }
 
     // Share state: User Name
@@ -49,7 +66,13 @@ class Page extends React.Component<Props, State> {
             userName: name,
             isLogin: true
         }))
-    }
+    };
+
+    setUnreadNum = (num: number): void => {
+        this.setState((state) => ({
+            unreadNum: num
+        }))
+    };
 
     handleSearchValue = (book: string): void => {
         this.setState((state) => ({
@@ -114,6 +137,10 @@ class Page extends React.Component<Props, State> {
     render(): React.ReactNode {
 
         let mainContent = this.state.mainContent;
+        let unreadMsg = <></>;
+        if (this.state.isLogin) {
+            unreadMsg = <Badge count={this.state.unreadNum}/>;
+        }
 
         switch (this.state.pageState) {
             case PageState.Login:
@@ -149,6 +176,9 @@ class Page extends React.Component<Props, State> {
                               bookname={this.state.searchValue}
                               jump={this.handlePageJump}
                               handleProductRequest={this.handleProductRequest}/>;
+                break;
+            case PageState.Message:
+                mainContent = <MsgPage username={this.state.userName}/>;
                 break;
             default:
                 break;
@@ -195,7 +225,9 @@ class Page extends React.Component<Props, State> {
                                             发布愿望
                                         </Nav.Link>
                                         <Nav.Link href="#msg" onClick={() => this.handlePageJump(PageState.Message)}>
+                                            <Badge count={this.state.unreadNum}>
                                             消息
+                                            </Badge>
                                         </Nav.Link>
                                         <Nav.Link href="#profile"
                                                   onClick={() => this.handlePageJump(PageState.Profile)}>

@@ -218,7 +218,6 @@ function NewProduct(props: Props) {
                         {
                             inform
                         }
-
                     </Form>
                 </Card.Body>
             </Card>
