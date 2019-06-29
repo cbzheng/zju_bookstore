@@ -5,6 +5,8 @@ import {useContext} from "react";
 import UserContext from "../../context/user-context";
 import UpdateBook from "./update-book";
 import ProductContext, {myProduct, ProductInfo} from '../../context/product-context'
+import {uploadOrder} from "../../API";
+import { message } from "antd";
 
 // Very import Props definition
 // book information: 1. list. 2. Props. 2. Product
@@ -47,14 +49,33 @@ function Product(props: Props) {
     const [bookName, setBookName] = useState(curProduct.book_name);
     const [description, setDescription] = useState(curProduct.description);
     const [update, setUpdate] =useState(false);
+    const [timestamp, setTimestamp] = useState('');
+    const [inform, setInform] = useState(<></>);
 
     const user = useContext(UserContext);
+
+    let handleOrderSub = async ()=>{
+        setTimestamp(Date.now().toString());
+        let result = await uploadOrder({
+            ot: timestamp,
+            bt: curProduct.timestamp,
+            seller: curProduct.seller,
+            buyer: user.userName,
+            price: curProduct.current_price.toString()
+        });
+        if (result) {
+            message.success('交易发起成功！')
+        } else {
+            message.error('你已经发起过这个订单了！')
+        }
+    };
+
     let updateForm = <UpdateBook
         setUpdate={ setUpdate}
         handleProductChange={props.handleProductRequest}
     />;
 
-    let actionButton = <Button>联系卖家</Button>;
+    let actionButton = <Button onClick={handleOrderSub}>发起交易</Button>;
     if (user.userName === curProduct.seller) {
         actionButton = <Button onClick={()=>{setUpdate(true)}}>修改信息</Button>
     }

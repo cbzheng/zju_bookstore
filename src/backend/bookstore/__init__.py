@@ -10,6 +10,28 @@ def create_app(test_config=None):
     app = Flask(__name__)
     db = MongoDB()
 
+    @app.route('/neworder/', methods=['POST'])
+    def addOrder():
+        data = request.get_json()
+        if db.add_order(ot=data['ot'], bt=data['bt'], seller=data['seller'], buyer=data['buyer'], price=data['price']):
+            return jsonify({
+                'result': True
+            })
+        else:
+            return jsonify({
+                'result': False
+            })
+
+    @app.route('/updata/order/', methods=['POST'])
+    def updateOrder():
+        data = request.get_json()
+        db.update_order(ot=data.ot, isFinish=data.isFinish, price=data.price)
+        return jsonify({})
+
+    @app.route('/get/order/<stamp>/', methods=['GET'])
+    def getOrder(stamp):
+        return db.get_order(stamp)
+
     @app.route('/user/<username>/sell/', methods=['GET'])
     def userSell(username):
         return db.get_user_sell(username)
