@@ -82,6 +82,36 @@ export function uploadProductInfo(book : Product) {
     })
 }
 
+export interface WantBook {
+    book_name : string,
+    lowPrice : Number,
+    highPrice : Number,
+    book_class : string,
+    description : string,
+    wanter: string,
+    timestamp: string
+}
+
+// Want book
+export function uploadWants(w : WantBook) {
+
+    return axios.post('/want/', {
+        book_name : w.book_name,
+        lowPrice : w.lowPrice,
+        highPrice : w.highPrice,
+        book_class : w.book_class,
+        description : w.description,
+        wanter: w.wanter,
+        timestamp: w.timestamp
+    }).then((response)=>{
+        console.log(response.data);
+        return response.data.result
+    }).catch(reason => {
+        return false
+    });
+
+}
+
 export function updateBook(book : updateProduct) {
 
     console.log(book);

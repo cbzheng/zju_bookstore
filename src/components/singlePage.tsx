@@ -10,6 +10,7 @@ import UserContext from '../context/user-context'
 import ProductContext, {myProduct, ProductInfo} from '../context/product-context'
 import Profile from "./profile";
 import SearchResult from "./present/search-book";
+import Want from "./product/want";
 
 export interface Props {
     isLogin: boolean
@@ -135,6 +136,10 @@ class Page extends React.Component<Props, State> {
                     handleProductRequest={this.handleProductUpdate}
                 />;
                 break;
+            case PageState.Want:
+                mainContent = <Want username={this.state.userName} jump={this.handlePageJump}
+                                    handleProductRequest={this.handleProductRequest}/>;
+                break;
             case PageState.Profile:
                 mainContent = <Profile jump={this.handlePageJump} handleProductRequest={this.handleProductRequest}/>
                 break;
@@ -170,8 +175,12 @@ class Page extends React.Component<Props, State> {
                                         <Nav.Link href="#signup" onClick={() => this.handlePageJump(PageState.SignUp)}>
                                             注册
                                         </Nav.Link>
-
+                                        <Nav.Link href="#new"
+                                                  onClick={() => this.handlePageJump(PageState.Want)}>
+                                            发布愿望
+                                        </Nav.Link>
                                     </>
+
 
                                 }
                                 {
@@ -180,6 +189,10 @@ class Page extends React.Component<Props, State> {
                                         <Nav.Link href="#new"
                                                   onClick={() => this.handlePageJump(PageState.New_Product)}>
                                             发布商品
+                                        </Nav.Link>
+                                        <Nav.Link href="#want"
+                                                  onClick={() => this.handlePageJump(PageState.Want)}>
+                                            发布愿望
                                         </Nav.Link>
                                         <Nav.Link href="#msg" onClick={() => this.handlePageJump(PageState.Message)}>
                                             消息
@@ -216,7 +229,7 @@ class Page extends React.Component<Props, State> {
                         {mainContent}
                     </ProductContext.Provider>
 
-                    <div style={{marginTop: '8%'}}>
+                    <div style={{paddingTop: '8%'}}>
                         <Jumbotron fluid>
 
                             <Container>

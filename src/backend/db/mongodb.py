@@ -1,6 +1,7 @@
 import mongoengine as mg
 from db.user import Users
 from db.book import Books
+from db.wants import Wants
 from mongoengine.queryset.visitor import Q
 from flask import jsonify
 
@@ -32,6 +33,17 @@ class MongoDB():
                      timestamp=timestamp,
                      image_name=img.filename,
                      seller=seller)
+        book.save()
+        return True
+
+    def add_want(self, book_name, lowPrice, highPrice, book_class, description, timestamp, wanter):
+        book = Wants(book_name=book_name,
+                     lowPrice=lowPrice,
+                     highPrice=highPrice,
+                     book_class=book_class,
+                     description=description,
+                     timestamp=timestamp,
+                     wanter=wanter)
         book.save()
         return True
 

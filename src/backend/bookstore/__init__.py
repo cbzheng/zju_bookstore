@@ -44,6 +44,20 @@ def create_app(test_config=None):
                 'result': True
             })
 
+    @app.route('/want/', methods=['POST'])
+    def upload_want():
+        data = request.get_json()
+        if db.add_want(book_name=data['book_name'],
+                       lowPrice=data['lowPrice'],
+                       highPrice=data['highPrice'],
+                       book_class=data['book_class'],
+                       description=data['description'],
+                       timestamp=data['timestamp'],
+                       wanter=data['wanter']):
+            return jsonify({
+                'result': True
+            })
+
     @app.route('/update/book/', methods=['POST'])
     def update_book():
         data = request.get_json()
