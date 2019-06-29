@@ -14,6 +14,10 @@ def create_app(test_config=None):
     def userSell(username):
         return db.get_user_sell(username)
 
+    @app.route('/user/<username>/want/', methods=['GET'])
+    def userWnat(username):
+        return db.get_user_want(username)
+
     @app.route('/server/search/<name>/', methods=['GET'])
     def search(name):
         return db.get_books_by_name(name)

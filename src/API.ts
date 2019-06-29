@@ -150,6 +150,16 @@ export function getOnSell(name: string) {
     })
 }
 
+// Get user want books
+export function getUserWant(name: string) {
+    if (name === ''){
+        name = '__normal'
+    }
+    return axios.get('/user/' + name + '/want/').then((response)=>{
+        return response.data;
+    })
+}
+
 // Get Recommend books
 export function getSearchResult(name: string) {
     if (name === ''){

@@ -76,6 +76,24 @@ class MongoDB():
 
         return jsonify({'sell_books': [response]})
 
+    def get_user_want(self, user_name):
+        books = Wants.objects(wanter=user_name)
+
+        # form response
+        response = []
+        for book in books:
+            response.append({
+                'timestamp': book.timestamp,
+                'book_name': book.book_name,
+                'lowPrice' : book.lowPrice,
+                'highPrice': book.highPrice,
+                'book_class' : book.book_class,
+                'description' : book.description,
+                'wanter': book.wanter
+            })
+
+        return jsonify({'want': [response]})
+
     def get_books_by_name(self, book_name):
         books = Books.objects(book_name__icontains=book_name)
 
