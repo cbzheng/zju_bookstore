@@ -3,6 +3,7 @@ from db.user import Users
 from db.book import Books
 from db.wants import Wants
 from db.order import Order
+from db.message import Message
 from mongoengine.queryset.visitor import Q
 from flask import jsonify
 
@@ -10,6 +11,33 @@ from flask import jsonify
 class MongoDB():
     def __init__(self):
         mg.connect('bookstore')
+
+    # function about Message
+    def send_msg(self, sender, receiver, content, time):
+        msg = Message(sender=sender, receiver=receiver, content=content, time=time)
+        msg.save()
+
+    # look up all the msg of a user
+    def lookup_msg(self, username):
+        msg_set = {}
+        sender = Message.objects(sender=username)
+        receiver = Message.objects(receiver=username)
+        for msg in sender:
+            if msg.receiver not in msg_set:
+                msg_set[msg.receiver] = []
+            msg_set[msg.receiver].append({
+                'time': msg.time,
+                'content': msg.content
+            })
+        for msg in receiver:
+            if msg.sender not in msg_set:
+                msg_set[msg.sender] = []
+            msg_set[msg.sender].append({
+                'time': msg.time,
+                'content': msg.content
+            })
+
+        return jsonify(msg_set)
 
     def add_user(self, username, email, password):
         if Users.objects(user_name=username):
