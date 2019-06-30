@@ -70,9 +70,17 @@ def create_app(test_config=None):
     def userWnat(username):
         return db.get_user_want(username)
 
+    @app.route('/want/', methods=['GET'])
+    def want():
+        return db.get_all_wnat()
+
     @app.route('/server/search/<name>/', methods=['GET'])
     def search(name):
         return db.get_books_by_name(name)
+
+    @app.route('/server/class/<name>/', methods=['GET'])
+    def category(name):
+        return db.get_books_by_class(name)
 
     @app.route('/recommend/<username>', methods=['GET'])
     def recommend(username):

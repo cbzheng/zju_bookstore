@@ -216,6 +216,15 @@ export function getSearchResult(name: string) {
     })
 }
 
+export function getBookByClass(name: string) {
+    if (name === '') {
+        name = '__normal'
+    }
+    return axios.get('/server/class/' + name + '/').then((response) => {
+        return response.data;
+    })
+}
+
 // Get Book Image
 export function getBookImg(timestamp: string) {
     return axios.get('/img/' + timestamp)
@@ -255,6 +264,12 @@ export function readMsg(sender: string, receiver: string) {
     return axios.post('/msg/read/', {
         sender: sender,
         receiver: receiver
+    })
+}
+
+export function get_wants() {
+    return axios.get('/want/').then((data)=>{
+        return data.data
     })
 }
 

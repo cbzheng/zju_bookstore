@@ -207,6 +207,24 @@ class MongoDB():
 
         return jsonify({'sell_books': [response]})
 
+    def get_all_wnat(self):
+        want = Wants.objects()
+
+        # form response
+        response = []
+        for book in want:
+            response.append({
+                'timestamp': book.timestamp,
+                'book_name': book.book_name,
+                'lowPrice': book.lowPrice,
+                'highPrice': book.highPrice,
+                'book_class': book.book_class,
+                'description': book.description,
+                'wanter': book.wanter
+            })
+
+        return jsonify({'want': [response]})
+
     def get_user_want(self, user_name):
         books = Wants.objects(wanter=user_name)
 
@@ -224,6 +242,24 @@ class MongoDB():
             })
 
         return jsonify({'want': [response]})
+
+    def get_books_by_class(self, book_class):
+        books = Books.objects(book_class=book_class)
+
+        # form response
+        response = []
+        for book in books:
+            response.append({
+                'timestamp': book.timestamp,
+                'book_name': book.book_name,
+                'originPrice': book.originPrice,
+                'curPrice': book.curPrice,
+                'book_class': book.book_class,
+                'description': book.description,
+                'seller': book.seller
+            })
+
+        return jsonify({'result': [response]})
 
     def get_books_by_name(self, book_name):
         books = Books.objects(book_name__icontains=book_name)
