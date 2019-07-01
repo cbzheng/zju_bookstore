@@ -18,6 +18,8 @@ function SignUp(props: Props) {
     const [password, setPassword] = useState('');
     const [confirmPass, setConfirmPass] = useState('');
     const [inform, setInform] = useState(<></>);
+    const [validName, setValidName] = useState(true);
+    const [validPass, setValidPass] = useState(true);
 
     // check password
     useEffect(() => {
@@ -35,7 +37,7 @@ function SignUp(props: Props) {
     let handleSubmit = async (event: any) => {
         console.log('password: ', password);
 
-        if (userName != '' && email != '' && password != '') {
+        if (userName != '' && email != '' && password != '' && validName && validPass) {
             let result = await signup(userName, email, password);
 
             // if the username exist in the database
@@ -70,12 +72,24 @@ function SignUp(props: Props) {
                         <Form.Group controlId="formUserName">
                             <Form.Label column={true}>用户名</Form.Label>
                             <Form.Control
+
                                 type="text"
                                 placeholder="User Name"
                                 value={userName}
-                                onChange={(e: any) => setUserName(e.target.value)}
+                                onChange={(e: any) =>{
+                                    setUserName(e.target.value)
+                                    if (e.target.value.length >= 6){
+                                        setValidName(true)
+                                    } else {
+                                        setValidName(false)
+                                    }
+                                }}
                                 required={true}
+                                isInvalid={!validName}
                             />
+                            <Form.Control.Feedback type={'invalid'}>
+                                用户名长度应大于6个字符
+                            </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="formBasicEmail">
                             <Form.Label column={true}>邮箱</Form.Label>
@@ -94,9 +108,20 @@ function SignUp(props: Props) {
                                 type="password"
                                 placeholder="Password"
                                 value={password}
-                                onChange={(e: any) => setPassword(e.target.value)}
+                                onChange={(e: any) => {
+                                    if (e.target.value.length >=6){
+                                        setValidPass(true)
+                                    } else {
+                                        setValidPass(false)
+                                    }
+                                    setPassword(e.target.value)
+                                }}
                                 required={true}
+                                isInvalid={!validPass}
                             />
+                            <Form.Control.Feedback type={'invalid'}>
+                                用户名密码应大于6个字符
+                            </Form.Control.Feedback>
                         </Form.Group>
 
                         <Form.Group controlId="formBasicPassword">

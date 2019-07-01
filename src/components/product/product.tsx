@@ -1,13 +1,16 @@
 import * as React from 'react'
 import {Card, Image, Badge, Button} from 'react-bootstrap'
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useContext} from "react";
 import UserContext from "../../context/user-context";
 import UpdateBook from "./update-book";
 import ProductContext, {myProduct, ProductInfo} from '../../context/product-context'
 import {uploadOrder} from "../../API";
-import {Divider, message} from "antd";
+import {Divider, Input, message, Select} from "antd";
 import MsgSender from "../message/msg-send";
+import {Simulate} from "react-dom/test-utils";
+
+const {Option} = Select;
 
 // Very import Props definition
 // book information: 1. list. 2. Props. 2. Product
@@ -51,18 +54,106 @@ function Product(props: Props) {
     const [description, setDescription] = useState(curProduct.description);
     const [update, setUpdate] = useState(false);
     const [timestamp, setTimestamp] = useState('');
-    const [inform, setInform] = useState(<></>);
+    const [method, setMethod] = useState('offline');
+    const [addr, setAddr] = useState('');
+    const [phone, setPhone] = useState('');
+    const [actionButton, setActionButton] = useState(<></>);
 
     const user = useContext(UserContext);
+
+    let handleMethodChange = (data: any) => {
+        if (data == 'mail') {
+            setActionButton(<div>
+                <h4 style={{marginTop: '20px', marginBottom: '20px'}}>请选择交易方式</h4>
+                <Select
+                    showSearch
+                    style={{width: 200}}
+
+                    placeholder="Select a person"
+                    optionFilterProp="children"
+                    onChange={(data) => {
+                        handleMethodChange(data)
+                    }}
+                >
+                    <Option value="mail">寄送</Option>
+                    <Option value="offline">线下交易</Option>
+                </Select>
+                {mailDom}
+                <Button onClick={handleOrderSub} style={{marginTop: '20px'}}>确定订单</Button>
+            </div>)
+        }
+        if (data == 'offline') {
+            setActionButton(<div>
+                <h4 style={{marginTop: '20px', marginBottom: '20px'}}>请选择交易方式</h4>
+                <Select
+                    showSearch
+                    style={{width: 200}}
+
+                    placeholder="Select a person"
+                    optionFilterProp="children"
+                    onChange={(data) => {
+                        handleMethodChange(data)
+                    }}
+                >
+                    <Option value="mail">寄送</Option>
+                    <Option value="offline">线下交易</Option>
+                </Select>
+                {phoneDom}
+                <Button onClick={handleOrderSub} style={{marginTop: '20px'}}>确定订单</Button>
+            </div>)
+        }
+        setMethod('offline')
+    }
+
+    let phoneDom = <div>
+        <h4 style={{marginTop: '20px', marginBottom: '20px'}}>请输入手机号码</h4>
+        <Input onChange={(t) => {
+            setPhone(t.target.value)
+        }} style={{width: '50%'}}/>
+    </div>;
+
+    let mailDom = <div>
+        <h4 style={{marginTop: '20px', marginBottom: '20px'}}>请输入邮寄地址</h4>
+        <Input onChange={(t) => {
+            setAddr(t.target.value)
+        }} style={{width: '50%'}}/>
+    </div>;
+
+    let trySub = () => {
+        console.log('try')
+        setActionButton(<div>
+            <div>
+            <h4 style={{marginTop: '20px', marginBottom: '20px'}}>请选择交易方式</h4>
+            <Select
+                showSearch
+                style={{width: 200}}
+
+                placeholder="Select a person"
+                optionFilterProp="children"
+                onChange={(data) => {
+                    handleMethodChange(data)
+                }}
+            >
+                <Option value="mail">寄送</Option>
+                <Option value="offline">线下交易</Option>
+            </Select>
+            </div>
+
+            <Button onClick={handleOrderSub} style={{marginTop: '20px'}}>确定订单</Button>
+        </div>);
+    }
 
     let handleOrderSub = async () => {
         setTimestamp(Date.now().toString());
         let result = await uploadOrder({
-            ot: timestamp,
+            ot: Date.now().toString(),
             bt: curProduct.timestamp,
             seller: curProduct.seller,
             buyer: user.userName,
-            price: curProduct.current_price.toString()
+            price: curProduct.current_price.toString(),
+            method: method,
+            addr: addr,
+            phone: phone
         });
         if (result) {
             message.success('交易发起成功！')
@@ -76,12 +167,21 @@ function Product(props: Props) {
         handleProductChange={props.handleProductRequest}
     />;
 
-    let actionButton = <Button onClick={handleOrderSub}>发起交易</Button>;
-    if (user.userName === curProduct.seller) {
-        actionButton = <Button onClick={() => {
-            setUpdate(true)
-        }}>修改信息</Button>
-    }
+    useEffect(() => {
+            setActionButton((
+                <div>
+                    <Button onClick={trySub}>发起交易</Button>
+
+                </div>
+            ));
+            if (user.userName === curProduct.seller) {
+                setActionButton(<Button onClick={() => {
+                        setUpdate(true)
+                    }}>修改信息</Button>
+                )
+            }
+        }
+    , []);
 
 
     return (
@@ -112,6 +212,7 @@ function Product(props: Props) {
                                 <div style={{color: '#db222f', fontSize: '30px'}}>
                                     <span style={{fontSize: '26px'}}>¥</span>{curProduct.current_price} <s
                                     style={{fontSize: '20px', color: 'gray'}}>¥{curProduct.original_price}</s>
+
                                 </div>
                                 <div style={{fontSize: '15px', color: 'gray'}}>
                                     <p>
@@ -134,6 +235,7 @@ function Product(props: Props) {
                         {
                             !update &&
                             actionButton
+
                         }
                         {
                             update &&
@@ -143,9 +245,9 @@ function Product(props: Props) {
 
                 </div>
             </div>
-            <Divider orientation={'left'} style={{ marginTop: '5%'}}>向卖家发送消息</Divider>
-            <div style={{ marginTop: '5%', marginRight: '5%'}}>
-                <MsgSender sender={user.userName} receiver={curProduct.seller} />
+            <Divider orientation={'left'} style={{marginTop: '5%'}}>向卖家发送消息</Divider>
+            <div style={{marginTop: '5%', marginRight: '5%'}}>
+                <MsgSender sender={user.userName} receiver={curProduct.seller}/>
             </div>
         </div>
 

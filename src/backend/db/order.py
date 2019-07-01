@@ -7,5 +7,13 @@ class Order(Document):
     seller = StringField(required=True)
     buyer = StringField(required=True)
     isFinish = BooleanField(default=False)
+    sellerAgree = BooleanField(default=True)
+
+    offLine = BooleanField(default=True)
+    mail = BooleanField(default=False)
+
+    address = StringField()
+    phone = StringField()
+
     agreePrice = FloatField(required=True)
 

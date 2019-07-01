@@ -39,7 +39,15 @@ def create_app(test_config=None):
     @app.route('/neworder/', methods=['POST'])
     def addOrder():
         data = request.get_json()
-        if db.add_order(ot=data['ot'], bt=data['bt'], seller=data['seller'], buyer=data['buyer'], price=data['price']):
+        if db.add_order(ot=data['ot'],
+                        bt=data['bt'],
+                        seller=data['seller'],
+                        buyer=data['buyer'],
+                        price=data['price'],
+                        addr=data['addr'],
+                        phone=data['phone'],
+                        method=data['method']
+                        ):
             return jsonify({
                 'result': True
             })
@@ -51,7 +59,10 @@ def create_app(test_config=None):
     @app.route('/updata/order/', methods=['POST'])
     def updateOrder():
         data = request.get_json()
-        db.update_order(ot=data.ot, isFinish=data.isFinish, price=data.price)
+        db.update_order(ot=data['ot'],
+                        isFinish=data['isFinish'],
+                        price=data['price'],
+                        sellerAgree=data['sellerAgree'])
         return jsonify({})
 
     @app.route('/get/order/<stamp>/', methods=['GET'])

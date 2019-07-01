@@ -20,7 +20,7 @@ class MongoDB():
     # count the unread messages
     def count_unread_msg(self, username):
         r_msg = Message.objects(receiver=username, isRead=False)
-        num =  r_msg.count()
+        num = r_msg.count()
         return jsonify({
             'count': num
         })
@@ -29,11 +29,9 @@ class MongoDB():
         msg1 = Message.objects(sender=sender)
         msg2 = Message.objects(sender=receiver)
         for msg in msg1:
-            msg.update(isRead= True)
+            msg.update(isRead=True)
         for msg in msg2:
             msg.update(isRead=True)
-
-
 
     # look up all the msg of a user
     def lookup_msg(self, username):
@@ -60,8 +58,6 @@ class MongoDB():
             })
 
         return jsonify(msg_set)
-
-
 
     def add_user(self, username, email, password):
         if Users.objects(user_name=username):
@@ -101,23 +97,34 @@ class MongoDB():
         return True
 
     # functions about orders
-    def add_order(self, ot, bt, seller, buyer, price):
+    def add_order(self, ot, bt, seller, buyer, price, method='offline', addr='', phone=''):
         if Order.objects(book_timestamp=bt, buyer=buyer):
             return False
+        offline = True
+        mail = False
+        if method == 'mail':
+            offline = False
+            mail = True
         book = Order(order_timestamp=ot,
-            book_timestamp=bt,
-            seller=seller,
-            buyer=buyer,
-            agreePrice=price)
+                     book_timestamp=bt,
+                     seller=seller,
+                     buyer=buyer,
+                     agreePrice=price,
+                     offLine=offline,
+                     mail=mail,
+                     address=addr,
+                     phone=phone
+                     )
         book.save()
         return True
 
-    def update_order(self, ot, isFinish, price):
+    def update_order(self, ot, isFinish, price, sellerAgree=False):
         order = Order.objects.get(order_timestamp=ot)
 
         order.update(
             isFinish=isFinish,
-            agreePrice=price
+            agreePrice=price,
+            sellerAgree=sellerAgree
         )
 
     def get_order(self, ot):
@@ -132,7 +139,12 @@ class MongoDB():
             'seller': order.seller,
             'buyer': order.buyer,
             'price': order.agreePrice,
-            'isFinish': order.isFinish
+            'isFinish': order.isFinish,
+            'offLine': order.offLine,
+            'mail': order.mail,
+            'addr': order.address,
+            'phone': order.phone,
+            'sellerAgree': order.sellerAgree
         })
 
     # Users order information

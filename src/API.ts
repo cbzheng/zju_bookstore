@@ -89,7 +89,10 @@ export interface Order {
     bt: string,
     seller: string,
     buyer: string,
-    price: string
+    price: string,
+    method: string,
+    addr: string,
+    phone: string
 }
 
 export function uploadOrder(o: Order) {
@@ -98,7 +101,10 @@ export function uploadOrder(o: Order) {
         bt: o.bt,
         seller: o.seller,
         buyer: o.buyer,
-        price: o.price
+        price: o.price,
+        addr: o.addr,
+        method: o.method,
+        phone: o.phone
     }).then((response) => {
         return response.data.result
     })
