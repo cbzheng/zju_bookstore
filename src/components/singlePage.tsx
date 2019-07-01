@@ -219,10 +219,6 @@ class Page extends React.Component<Props, State> {
                                         <Nav.Link href="#signup" onClick={() => this.handlePageJump(PageState.SignUp)}>
                                             注册
                                         </Nav.Link>
-                                        <Nav.Link href="#new"
-                                                  onClick={() => this.handlePageJump(PageState.Want)}>
-                                            发布愿望
-                                        </Nav.Link>
                                     </>
 
 

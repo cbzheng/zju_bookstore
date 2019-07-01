@@ -6,7 +6,8 @@ import {useContext, useState} from "react";
 import OnSell from "./present/on-sell-book";
 import WantList from "./present/want-list";
 import OrderList from "./present/order-list";
-import { Button, Steps} from "antd";
+import {Button, Steps, Icon, Result} from "antd";
+// import Result from 'antd/dist'
 import {getOrder, getUserWant, updateOrder} from "../API";
 import {useEffect} from "react";
 
@@ -25,37 +26,45 @@ function OrderPage(props: Props) {
     const [orderState, setOrderState] = useState(1);
     const [sellerAgree, setSellerAgree] = useState('In Progress');
     const [orderFinish, setOrderFinish] = useState('Waiting...');
-    const [content, setContent ] = useState(<></>);
+    const [content, setContent] = useState(<></>);
 
     const [price, setPrice] = useState(0);
 
     // several possible content
     let buyerWaiting = (
-        <h1>正在等待卖家同意交易...</h1>
+        <div>
+            <Result status={'info'} icon={<Icon type="edit" theme="twoTone"/>}
+                    extra={<h3>正在等待买家确认...</h3>}/>
+
+        </div>
     );
 
 
     let sellerAgreePage = (
         <div>
-            <h1 style={{marginBottom: '30px'}}>是否同意交易？</h1>
-            <div style={{marginBottom: '20px'}}>
-                <Button onClick={()=>{
-                    updateOrder(props.orderTimeStamp, true, price, true)
-                    setSellerAgree('Finished')
-                    setOrderFinish('Done')
-                    setContent(Success)
-                }}>同意</Button>
-            </div>
-            <div>
-                <Button onClick={()=>{
+            <Result status={'info'} icon={<Icon type="edit" theme="twoTone"/>}
+                    extra={<h3>是否同意交易？</h3>}/>
+            <div style={{textAlign: 'center'}}>
+                <div style={{marginBottom: '20px', marginTop: '5%'}}>
+                    <Button onClick={() => {
+                        updateOrder(props.orderTimeStamp, true, price, true);
+                        setSellerAgree('Finished');
+                        setOrderFinish('Done');
+                        setOrderState(3);
+                        setContent(Success)
+                    }}>同意</Button>
+                </div>
+                <div>
+                    <Button onClick={() => {
 
-                }}>不同意</Button>
+                    }}>不同意</Button>
+                </div>
             </div>
         </div>
     )
     let Success = (
         <div>
-            <h1> 交易成功！ </h1>
+            <Result status={'success'} title={'交易成功！'}/>
         </div>);
 
 
@@ -70,7 +79,7 @@ function OrderPage(props: Props) {
             return
         } else {
             setOrderState(1);
-            if ( user.userName == data.buyer){
+            if (user.userName == data.buyer) {
                 setContent(buyerWaiting);
             } else if (user.userName == data.seller) {
                 setContent(sellerAgreePage)
@@ -92,7 +101,7 @@ function OrderPage(props: Props) {
                 <Step title={sellerAgree} description="卖家同意交易"/>
                 <Step title={orderFinish} description="完成交易"/>
             </Steps>
-            <div style={{width: '75%', paddingRight: '5%', paddingLeft: '5%'}}>
+            <div style={{width: '100%', paddingRight: '5%', paddingLeft: '5%'}}>
                 <Card border="light">
                     <Card.Body>
                         {content}

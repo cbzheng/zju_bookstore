@@ -63,6 +63,7 @@ def create_app(test_config=None):
                         isFinish=data['isFinish'],
                         price=data['price'],
                         sellerAgree=data['sellerAgree'])
+
         return jsonify({})
 
     @app.route('/get/order/<stamp>/', methods=['GET'])

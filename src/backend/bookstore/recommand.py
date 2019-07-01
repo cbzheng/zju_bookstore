@@ -4,6 +4,7 @@ from flask import jsonify
 
 
 def get_recommend_books(user_name, db):
+
     books = Books.objects[:bookstore.RECOMMEND_BOOK_NUM]
 
     # form response

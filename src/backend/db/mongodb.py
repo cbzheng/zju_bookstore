@@ -12,6 +12,7 @@ class MongoDB():
     def __init__(self):
         mg.connect('bookstore')
 
+
     # function about Message
     def send_msg(self, sender, receiver, content, time):
         msg = Message(sender=sender, receiver=receiver, content=content, time=time)
@@ -120,6 +121,10 @@ class MongoDB():
 
     def update_order(self, ot, isFinish, price, sellerAgree=False):
         order = Order.objects.get(order_timestamp=ot)
+
+        if isFinish:
+            book = Books.objects.get(timestamp=order.book_timestamp)
+            # book.delete()
 
         order.update(
             isFinish=isFinish,
