@@ -110,11 +110,12 @@ export function uploadOrder(o: Order) {
     })
 }
 
-export function updateOrder(ot: string, isFinish: boolean, price: number) {
+export function updateOrder(ot: string, isFinish: boolean, price: number, sellerAgree:boolean) {
     return axios.post('/update/order/', {
         ot: ot,
         isFinish: isFinish,
-        price: price
+        price: price,
+        sellerAgree: sellerAgree
     })
 }
 
@@ -275,6 +276,12 @@ export function readMsg(sender: string, receiver: string) {
 
 export function get_wants() {
     return axios.get('/want/').then((data)=>{
+        return data.data
+    })
+}
+
+export function get_order(ot: string) {
+    return axios.get('/get/order/'+ot+'/').then((data)=>{
         return data.data
     })
 }

@@ -7,7 +7,7 @@ class Order(Document):
     seller = StringField(required=True)
     buyer = StringField(required=True)
     isFinish = BooleanField(default=False)
-    sellerAgree = BooleanField(default=True)
+    sellerAgree = BooleanField(default=False)
 
     offLine = BooleanField(default=True)
     mail = BooleanField(default=False)

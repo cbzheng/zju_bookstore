@@ -14,6 +14,7 @@ import Want from "./product/want";
 import {getUnread} from "../API";
 import {Badge} from "antd";
 import MsgPage from "./message/msg-page";
+import OrderPage from "./order-page";
 
 export interface Props {
     isLogin: boolean
@@ -29,7 +30,8 @@ export interface State {
     curProduct: ProductInfo,
     searchValue: string,
     mainContent: JSX.Element
-    unreadNum: number
+    unreadNum: number,
+    ot: string
 }
 
 class Page extends React.Component<Props, State> {
@@ -44,7 +46,8 @@ class Page extends React.Component<Props, State> {
             curProduct: myProduct,
             searchValue: '',
             mainContent: <></>,
-            unreadNum: 0
+            unreadNum: 0,
+            ot: ''
         };
     }
 
@@ -68,6 +71,12 @@ class Page extends React.Component<Props, State> {
         }))
     };
 
+    handelOt = (ot: string): void => {
+        this.setState((state) => ({
+            ot: ot
+        }))
+    };
+
     setUnreadNum = (num: number): void => {
         this.setState((state) => ({
             unreadNum: num
@@ -86,7 +95,8 @@ class Page extends React.Component<Props, State> {
         }))
     }
 
-    handlePageJump = (s: PageState): void => {
+    handlePageJump = (s: PageState, ot=''): void => {
+        this.handelOt(ot);
         this.setState((state) => ({
             pageState: s
         }))
@@ -180,6 +190,10 @@ class Page extends React.Component<Props, State> {
             case PageState.Message:
                 mainContent = <MsgPage username={this.state.userName}/>;
                 break;
+            case PageState.Order:
+                mainContent = <OrderPage jump={this.handlePageJump}
+                                         handleProductRequest={this.handleProductRequest}
+                                         orderTimeStamp={this.state.ot}/>
             default:
                 break;
         }

@@ -8,7 +8,8 @@ enum PageState {
     Profile,
     Product,
     SearchResult,
-    Want
+    Want,
+    Order
 }
 
 export default PageState;

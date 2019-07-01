@@ -56,7 +56,7 @@ def create_app(test_config=None):
                 'result': False
             })
 
-    @app.route('/updata/order/', methods=['POST'])
+    @app.route('/update/order/', methods=['POST'])
     def updateOrder():
         data = request.get_json()
         db.update_order(ot=data['ot'],

@@ -6,6 +6,7 @@ import {List, Avatar, Button, Divider, Tag} from 'antd'
 import {getBookImg, getOnSell, getRecommendBooks, getUserOrder, getUserWant} from "../../API";
 import RecommendCard from "./recommendCard";
 import bookLogo from '../../static/book.png'
+import PageState from "../../utils/page-state";
 
 export interface Props {
     username: string
@@ -94,7 +95,10 @@ function OrderList(props: Props) {
                         <List.Item actions={[<a>联系卖家</a>, <a>删除交易</a>]}>
                             <Tag color={'geekblue'}>{item.book_class}</Tag>
                             <List.Item.Meta
-                                title={<a href="https://ant.design">{item.name}</a>}
+                                title={<a href="#" onClick={()=>{
+                                    props.jump(PageState.Order, item.ot)
+                                }
+                                }>{item.name}</a>}
                                 description={'价格：' + item.price}
                             />
                         </List.Item>)}
@@ -110,7 +114,11 @@ function OrderList(props: Props) {
                             <Tag color={'blue'}>{item.book_class}</Tag>
 
                             <List.Item.Meta
-                                title={<a href="https://ant.design">{item.name}</a>}
+                                title={
+                                    <a href="#" onClick={()=>{
+                                        props.jump(PageState.Order, item.ot)
+                                }
+                                }>{item.name}</a>}
                                 description={'价格：' + item.price}
                             />
                         </List.Item>)}
